@@ -1,2 +1,2 @@
-# Fianciero
+# Financiero
 Proyecto de analisis financiero.

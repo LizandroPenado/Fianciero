@@ -9,4 +9,5 @@ class Cuenta extends Model
 {
     use HasFactory;
     protected $fillable = ['codigo', 'nombre', 'tipo'];
+    
 }

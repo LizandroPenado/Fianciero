@@ -23,8 +23,14 @@ export const SidebarData = [
     cName: 'nav-text'
   },
   {
-    title: 'Analisis',
-    path: '/analisis',
+    title: 'Analisis vertical',
+    path: '/analisisVertical',
+    icon: <DescriptionIcon />,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Analisis horizontal',
+    path: '/analisisHorizontal',
     icon: <DescriptionIcon />,
     cName: 'nav-text'
   },

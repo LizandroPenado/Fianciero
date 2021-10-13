@@ -1,6 +1,7 @@
 import React from 'react';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 export const SidebarData = [
   {
@@ -19,6 +20,12 @@ export const SidebarData = [
     title: 'Cuenta',
     path: '/cuenta',
     icon: <PersonIcon />,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Analisis',
+    path: '/analisis',
+    icon: <DescriptionIcon />,
     cName: 'nav-text'
   },
 ];

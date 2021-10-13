@@ -1,32 +1,25 @@
-import React, { Component } from "react";
+import React from "react";
 import { Form  } from "react-bootstrap";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
-class Home extends Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
+export default function modalCu(props){
     return (
-      <Modal isOpen={this.props.abrir} centered>
+      <Modal isOpen={props.abrir} centered>
         <ModalHeader style={{ display: "block" }}>
-          {this.props.tipoModal === "insertar" ? (
-            <span>Crear {this.props.titulo}</span>
+          {props.tipoModal === "insertar" ? (
+            <span>Crear {props.titulo}</span>
           ) : (
-            <span>Actualizar {this.props.titulo}</span>
+            <span>Actualizar {props.titulo}</span>
           )}
         </ModalHeader>
         <ModalBody>
           <Form.Group>
-            {this.props.formulario}
+            {props.formulario}
           </Form.Group>
           <ModalFooter>
-            {this.props.pieModal}
+            {props.pieModal}
           </ModalFooter>
         </ModalBody>
       </Modal>
     );
   }
-}
-
-export default Home;

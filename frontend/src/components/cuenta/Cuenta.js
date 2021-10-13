@@ -4,7 +4,6 @@ import Botones from "../datatable/Botones";
 import { Button } from "react-bootstrap";
 import Swal from "sweetalert2";
 import axios from "axios";
-import ModalCU from "../modal/ModalCU";
 
 class Cuenta extends Component {
   constructor(props) {

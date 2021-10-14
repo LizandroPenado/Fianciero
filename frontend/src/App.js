@@ -5,7 +5,8 @@ import Navbar from "./components/layout/Navbar";
 import Home from "./components/home/Home";
 import Login from "./components/login/Login";
 import Cuenta from "./components/cuenta/Cuenta";
-import Analisis from "./components/analisis/Analisis";
+import AnalisisVertical from "./components/analisis/AnalisisVertical";
+import AnalisisHorizontal from "./components/analisis/AnalisisHorizontal";
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
           <Route path="/" exact component={Home} />
           <Route path="/login" component={Login} />
           <Route path="/cuenta" component={Cuenta} />
-          <Route path="/analisis" component={Analisis} />
+          <Route path="/analisisVertical" component={AnalisisVertical} />
+          <Route path="/analisisHorizontal" component={AnalisisHorizontal} />
         </Switch>
       </Router>
     </main>

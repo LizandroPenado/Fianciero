@@ -5,6 +5,7 @@ import Navbar from "./components/layout/Navbar";
 import Home from "./components/home/Home";
 import Login from "./components/login/Login";
 import Cuenta from "./components/cuenta/Cuenta";
+import Empresa from "./components/Empresa/Empresa"
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" exact component={Home} />
           <Route path="/login" component={Login} />
           <Route path="/cuenta" component={Cuenta} />
+          <Route path="/empresa" component={Empresa} />
         </Switch>
       </Router>
     </main>

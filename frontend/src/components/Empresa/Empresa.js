@@ -25,7 +25,6 @@ class Empresa extends Component{
         promesa.then((d)=>{
             console.log(d)
             this.setState({catalogo: d})
-            console.log(this.state.catalogo)
         })
     }
     render(){

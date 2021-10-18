@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Empresas;
+use App\Models\TiposCuenta;
 use Illuminate\Http\Request;
 
-class EmpresasController extends Controller
+class TiposCuentaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,6 @@ class EmpresasController extends Controller
     public function index()
     {
         //
-        $empresas = Empresas::with('actividad.sector')->get(); //Traemos con los datos de su actividad y de su sector
-        return $empresas;
     }
 
     /**
@@ -38,19 +36,15 @@ class EmpresasController extends Controller
     public function store(Request $request)
     {
         //
-        $empresa = new Empresas();
-        $empresa->nombre = $request->nombre;
-        $empresa->descripcion = $request->descripcion;
-        $empresa->actividad_id = $request->actividad_id;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Empresas  $empresas
+     * @param  \App\Models\TiposCuenta  $tiposCuenta
      * @return \Illuminate\Http\Response
      */
-    public function show(Empresas $empresas)
+    public function show(TiposCuenta $tiposCuenta)
     {
         //
     }
@@ -58,10 +52,10 @@ class EmpresasController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Empresas  $empresas
+     * @param  \App\Models\TiposCuenta  $tiposCuenta
      * @return \Illuminate\Http\Response
      */
-    public function edit(Empresas $empresas)
+    public function edit(TiposCuenta $tiposCuenta)
     {
         //
     }
@@ -70,10 +64,10 @@ class EmpresasController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Empresas  $empresas
+     * @param  \App\Models\TiposCuenta  $tiposCuenta
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Empresas $empresas)
+    public function update(Request $request, TiposCuenta $tiposCuenta)
     {
         //
     }
@@ -81,10 +75,10 @@ class EmpresasController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Empresas  $empresas
+     * @param  \App\Models\TiposCuenta  $tiposCuenta
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Empresas $empresas)
+    public function destroy(TiposCuenta $tiposCuenta)
     {
         //
     }

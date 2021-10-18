@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ActividadEconomica;
+use App\Models\Sectores;
 use Illuminate\Http\Request;
 
 class ActividadEconomicaController extends Controller
@@ -16,6 +17,18 @@ class ActividadEconomicaController extends Controller
     {
         //
         $actividades = ActividadEconomica::with('sector')->get(); //Traemos con los datos del sector
+        return $actividades;
+    }
+    /**
+     * Display a listing of the resource.
+     ** @param  \Illuminate\Http\Request  $request
+     *  
+     * @return \Illuminate\Http\Response
+     */
+    public function actividadesPorSector(Request $request)
+    {
+        $sector_id = $request->id;
+        $actividades = ActividadEconomica::with('sector')->get()->where('sector_id',$sector_id); //Traemos con los datos del sector
         return $actividades;
     }
 

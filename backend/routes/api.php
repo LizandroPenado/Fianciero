@@ -28,6 +28,9 @@ Route::get('/sectores', 'App\Http\Controllers\SectoresController@index'); //Most
 
 //ActividadEconomica
 Route::get('/actividades', 'App\Http\Controllers\ActividadEconomicaController@index'); //Mostrar todas las actividades
+Route::get('/actividadesPorSector', 'App\Http\Controllers\ActividadEconomicaController@actividadesPorSector'); //Mostrar todas las actividades por sector
+
 
 //Empresas
 Route::get('/empresas', 'App\Http\Controllers\EmpresasController@index'); //Mostrar todas las empresas
+Route::post('/empresas', 'App\Http\Controllers\EmpresasController@store'); //Crear registro

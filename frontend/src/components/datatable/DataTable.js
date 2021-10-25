@@ -5,11 +5,10 @@ import { Container, Row, Col } from "react-bootstrap";
 export default function DataTable(props) {
   const options = {
     download: "false",
-    print: "false",
     responsive: "simple",
-    selectableRows: false,
-    rowsPerPage: 10,
-    rowsPerPageOptions: [10, 20, 30],
+    selectableRows: "none",
+    rowsPerPage: 5,
+    rowsPerPageOptions: [5, 10, 20, 30],
     tableBodyHeight: "100%",
     tableBodyMaxHeight: "100%",
     textLabels: {
@@ -48,10 +47,12 @@ export default function DataTable(props) {
     },
   };
   return (
-    <Container className="pt-5">
-      <Row className="justify-content-md-center">
-        <Col xs lg="2"></Col>
-        <Col>
+    <Container fluid="xxl">
+      <Row>
+        <Col sm={2} align="right" className="pt-3">
+          <div className="pb-4">{props.agregar}</div>
+        </Col>
+        <Col sm={10}>
           <MUIDataTable
             title={props.titulo}
             data={props.datos}

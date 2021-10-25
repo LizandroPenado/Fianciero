@@ -4,6 +4,8 @@ import { Col, Form } from "react-bootstrap";
 import ReactToPrint from "react-to-print";
 import Opciones from "./Opciones";
 import TablaAnalisis from "./TablaAnalisis";
+import "./Analisis.css"
+
 
 /* Este arreglo crearia para mostrar en la tabla */
 const cuentas = [

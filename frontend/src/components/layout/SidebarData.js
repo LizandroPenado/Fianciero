@@ -1,6 +1,10 @@
 import React from 'react';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
+import DescriptionIcon from '@mui/icons-material/Description';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import AutoGraphIcon from '@mui/icons-material/AutoGraph';
+import InfoIcon from '@mui/icons-material/Info';
 
 export const SidebarData = [
   {
@@ -16,9 +20,39 @@ export const SidebarData = [
     cName: 'nav-text'
   },
   {
-    title: 'Cuenta',
-    path: '/cuenta',
-    icon: <PersonIcon />,
+    title: 'Registrar información',
+    path: '/información',
+    icon: <InfoIcon />,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Gestión sectores',
+    path: '/sector',
+    icon: <AssignmentIcon/>,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Gestión roles',
+    path: '/rol',
+    icon: <AssignmentIcon/>,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Analisis vertical',
+    path: '/analisisVertical',
+    icon: <DescriptionIcon />,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Analisis horizontal',
+    path: '/analisisHorizontal',
+    icon: <DescriptionIcon />,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Graficar',
+    path: '/graficar',
+    icon: <AutoGraphIcon />,
     cName: 'nav-text'
   },
   {

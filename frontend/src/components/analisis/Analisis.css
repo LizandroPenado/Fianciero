@@ -1,0 +1,10 @@
+.opciones-analisis{
+    background-color: #32658D;
+    border-radius: 30px 30px 30px 30px;
+    border: 1px solid #060b26;
+    color:white;
+  }
+
+.opciones-analisis:hover{
+  transform: scale(1.05);
+}

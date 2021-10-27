@@ -4,13 +4,12 @@ import Botones from "../datatable/Botones";
 import { Button } from "react-bootstrap";
 import Swal from "sweetalert2";
 import axios from "axios";
-import ModalCU from "../modal/ModalCU";
 
-class Cuenta extends Component {
+class Rol extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cuentas: [],
+      rol: [],
       modalInsertar: false,
       modalEliminar: false,
       form: {
@@ -32,8 +31,7 @@ class Cuenta extends Component {
         Swal.fire({
           position: "center",
           icon: "error",
-          title:
-            "Por el momento no hay conexión con la base de datos",
+          title: "Por el momento no hay conexión con la base de datos",
         });
       });
   }
@@ -59,25 +57,26 @@ class Cuenta extends Component {
           customBodyRender: (value, tableMeta, updateValue) => {
             return <Botones />;
           },
+          print: false,
         },
       },
     ];
     return (
       <>
-        <div className="pt-3">
-          <Button
-            variant="success"
-            /* onClick={() => {
+        <DataTable
+          agregar={
+            <Button
+              variant="success"
+              /* onClick={() => {
               this.setState({ form: null, tipoModal: "insertar" });
               this.modalInsertar();
             }} */
-          >
-            Crear
-          </Button>
-        </div>
-        <DataTable
-          titulo="Catalogo"
-          noRegistro="No hay registro de empleados"
+            >
+              Crear
+            </Button>
+          }
+          titulo="Roles"
+          noRegistro="No hay registro de roles"
           columnas={columns}
           datos={this.state.cuentas}
         />
@@ -86,4 +85,4 @@ class Cuenta extends Component {
   }
 }
 
-export default Cuenta;
+export default Rol;

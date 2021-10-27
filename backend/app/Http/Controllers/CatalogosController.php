@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Catalogos;
 use Illuminate\Http\Request;
-use App\Models\Cuenta;
 
-class CuentaController extends Controller
+class CatalogosController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,7 @@ class CuentaController extends Controller
      */
     public function index()
     {
-        $cuentas = Cuenta::all();
-        return $cuentas;
+        //
     }
 
     /**
@@ -36,23 +35,16 @@ class CuentaController extends Controller
      */
     public function store(Request $request)
     {
-        $cuenta = new Cuenta();
-        $cuenta->codigo = $request->codigo;
-        $cuenta->nombre =  $request->nombre;
-        $cuenta->rubro_id = $request->rubro_id;
-        $cuenta->tipo_id =  $request->tipo_id;
-        $cuenta->empresa_id =  $request->empresa_id;
-
-        $cuenta->save();
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Catalogos  $catalogos
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Catalogos $catalogos)
     {
         //
     }
@@ -60,10 +52,10 @@ class CuentaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Catalogos  $catalogos
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Catalogos $catalogos)
     {
         //
     }
@@ -72,29 +64,22 @@ class CuentaController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Catalogos  $catalogos
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, Catalogos $catalogos)
     {
-        $cuenta = Cuenta::findOrFail($request->id);
-        $cuenta->codigo =  $request->codigo;
-        $cuenta->rubro_id = $request->rubrop_id;
-        $cuenta->tipo_id =  $request->tipo_id;
-
-        $cuenta->save();
-        return $cuenta;
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Catalogos  $catalogos
      * @return \Illuminate\Http\Response
      */
-    public function destroy($request)
+    public function destroy(Catalogos $catalogos)
     {
-        $cuenta = Cuenta::destroy($request->id);
-        return $cuenta;
+        //
     }
 }

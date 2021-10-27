@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empresas;
 use Illuminate\Http\Request;
-use App\Models\Cuenta;
 
-class CuentaController extends Controller
+class EmpresasController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,10 +14,22 @@ class CuentaController extends Controller
      */
     public function index()
     {
-        $cuentas = Cuenta::all();
-        return $cuentas;
+        //
+        $empresas = Empresas::with('actividad.sector')->get(); //Traemos con los datos de su actividad y de su sector
+        return $empresas;
     }
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function ultimaEmpresa()
+    {
+        //
+        $empresas = Empresas::orderby('created_at','desc')->first();
+        return $empresas;
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -36,23 +48,21 @@ class CuentaController extends Controller
      */
     public function store(Request $request)
     {
-        $cuenta = new Cuenta();
-        $cuenta->codigo = $request->codigo;
-        $cuenta->nombre =  $request->nombre;
-        $cuenta->rubro_id = $request->rubro_id;
-        $cuenta->tipo_id =  $request->tipo_id;
-        $cuenta->empresa_id =  $request->empresa_id;
-
-        $cuenta->save();
+        //
+        $empresa = new Empresas();
+        $empresa->nombre = $request->nombre;
+        $empresa->descripcion = $request->descripcion;
+        $empresa->actividad_id = $request->actividad_id;
+        $empresa->save();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Empresas  $empresas
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Empresas $empresas)
     {
         //
     }
@@ -60,10 +70,10 @@ class CuentaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Empresas  $empresas
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Empresas $empresas)
     {
         //
     }
@@ -72,29 +82,22 @@ class CuentaController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Empresas  $empresas
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, Empresas $empresas)
     {
-        $cuenta = Cuenta::findOrFail($request->id);
-        $cuenta->codigo =  $request->codigo;
-        $cuenta->rubro_id = $request->rubrop_id;
-        $cuenta->tipo_id =  $request->tipo_id;
-
-        $cuenta->save();
-        return $cuenta;
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Empresas  $empresas
      * @return \Illuminate\Http\Response
      */
-    public function destroy($request)
+    public function destroy(Empresas $empresas)
     {
-        $cuenta = Cuenta::destroy($request->id);
-        return $cuenta;
+        //
     }
 }

@@ -55,4 +55,10 @@ export const SidebarData = [
     icon: <AutoGraphIcon />,
     cName: 'nav-text'
   },
+  {
+    title: 'Empresa',
+    path: '/empresa',
+    icon: <PersonIcon />,
+    cName: 'nav-text'
+  },
 ];

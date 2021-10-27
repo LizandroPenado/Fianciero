@@ -20,6 +20,17 @@ class EmpresasController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function ultimaEmpresa()
+    {
+        //
+        $empresas = Empresas::orderby('created_at','desc')->first();
+        return $empresas;
+    }
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -42,6 +53,7 @@ class EmpresasController extends Controller
         $empresa->nombre = $request->nombre;
         $empresa->descripcion = $request->descripcion;
         $empresa->actividad_id = $request->actividad_id;
+        $empresa->save();
     }
 
     /**

@@ -34,3 +34,4 @@ Route::get('/actividadesPorSector', 'App\Http\Controllers\ActividadEconomicaCont
 //Empresas
 Route::get('/empresas', 'App\Http\Controllers\EmpresasController@index'); //Mostrar todas las empresas
 Route::post('/empresas', 'App\Http\Controllers\EmpresasController@store'); //Crear registro
+Route::get('/ultimaEmpresa', 'App\Http\Controllers\EmpresasController@ultimaEmpresa'); //Mostrar todas las empresas

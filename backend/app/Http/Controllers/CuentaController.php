@@ -37,9 +37,11 @@ class CuentaController extends Controller
     public function store(Request $request)
     {
         $cuenta = new Cuenta();
-        $cuenta->codigo =  $request->codigo;
+        $cuenta->codigo = $request->codigo;
         $cuenta->nombre =  $request->nombre;
-        $cuenta->tipo =  $request->tipo;
+        $cuenta->rubro_id = $request->rubro_id;
+        $cuenta->tipo_id =  $request->tipo_id;
+        $cuenta->empresa_id =  $request->empresa_id;
 
         $cuenta->save();
     }
@@ -77,8 +79,8 @@ class CuentaController extends Controller
     {
         $cuenta = Cuenta::findOrFail($request->id);
         $cuenta->codigo =  $request->codigo;
-        $cuenta->nombre =  $request->nombre;
-        $cuenta->tipo =  $request->tipo;
+        $cuenta->rubro_id = $request->rubrop_id;
+        $cuenta->tipo_id =  $request->tipo_id;
 
         $cuenta->save();
         return $cuenta;

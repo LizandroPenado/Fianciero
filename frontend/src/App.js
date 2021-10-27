@@ -5,9 +5,9 @@ import Navbar from "./components/layout/Navbar";
 import Home from "./components/home/Home";
 import Login from "./components/login/Login";
 import Cuenta from "./components/cuenta/Cuenta";
-import Empresa from "./components/Empresa/Empresa"
+import Empresa from "./components/empresa/Empresa"
 
-function App() {
+export default function App() {
   return (
     <main /* className={classes.content} */>
       <Router>
@@ -23,4 +23,3 @@ function App() {
   );
 }
 
-export default App;

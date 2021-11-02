@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+//Cuentas
 Route::get('/cuentas', 'App\Http\Controllers\CuentaController@index'); //Mostrar todos los registros
 Route::post('/cuentas', 'App\Http\Controllers\CuentaController@store'); //Crear registro
 Route::put('/cuentas/{id}', 'App\Http\Controllers\CuentaController@update'); //Actualizar registro
@@ -35,3 +35,7 @@ Route::get('/actividadesPorSector', 'App\Http\Controllers\ActividadEconomicaCont
 Route::get('/empresas', 'App\Http\Controllers\EmpresasController@index'); //Mostrar todas las empresas
 Route::post('/empresas', 'App\Http\Controllers\EmpresasController@store'); //Crear registro
 Route::get('/ultimaEmpresa', 'App\Http\Controllers\EmpresasController@ultimaEmpresa'); //Mostrar todas las empresas
+
+//Balances
+Route::get('/balances', 'App\Http\Controllers\BalancesController@index'); //Mostrar todos los registros de balances
+Route::post('/balances', 'App\Http\Controllers\BalancesController@store'); //Guarda los balances

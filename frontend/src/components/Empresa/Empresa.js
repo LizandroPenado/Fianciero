@@ -26,6 +26,7 @@ class Empresa extends Component{
         super(props)
         this.state={
             catalogo: [],
+            balance: [],
             sectores: [],
             actividades: [],
             empresa: {
@@ -81,6 +82,21 @@ class Empresa extends Component{
             
             this.setState({catalogo: cuenta})
             console.log(this.state.catalogo)
+        })
+    }
+
+    leerBalance = (archivo) =>{
+        const promesa = new Promise((resolve,reject)=>{
+            const lector = new FileReader()
+            lector.readAsArrayBuffer(archivo)
+            lector.onload = (e) =>{
+                const bufferArray = e.target.result
+                const libro = XLSX.read(bufferArray, {type: "buffer"})
+                const nombreHoja = libro.SheetNames[0]
+                const hoja = libro.Sheets[nombreHoja]
+                const data = XLSX.utils.sheet_to_json(hoja)
+                resolve(data)
+            }
         })
     }
     componentDidMount() {
@@ -165,8 +181,7 @@ class Empresa extends Component{
                         empresa_id: cuenta[i].empresa_id,
                     }).then((response) =>{
                     })
-                    contador++   
-                        
+                    contador++       
             }
             Swal.fire({
                 position: "center",
@@ -175,6 +190,35 @@ class Empresa extends Component{
                 showConfirmButton: true,
             })
     }  
+    guardarBalance = async () =>{
+        console.log(this.state.balance.length)
+        const arreglo_inicial = this.state.balance;
+        const cuenta = []
+        var contador = 0
+        for(var i=0;i<arreglo_inicial.length; i++){
+            cuenta[i] = {
+                    anio: arreglo_inicial[i].anio,
+                    valor: arreglo_inicial[i].valor,
+                    empresa_id: arreglo_inicial[i].empresa_id,
+                    cuenta_id: arreglo_inicial[i].cuenta_id
+            }
+            axios
+                .post("http://localhost:8000/api/balances",{
+                    anio: cuenta[i].anio,
+                    valor: cuenta[i].valor,
+                    empresa_id: cuenta[i].empresa_id,
+                    cuenta_id: cuenta[i].cuenta_id
+                }).then((response) =>{
+                })
+                contador++       
+        }
+        Swal.fire({
+            position: "center",
+            icon:"success",
+            title:"Los saldos de " + contador + " cuentas se han guardado con éxito",
+            showConfirmButton: true,
+        })
+}  
     render(){
         const columns = [
             {
@@ -202,6 +246,28 @@ class Empresa extends Component{
                 label: "Rubro"
             }
 
+        ]
+        const columnsBalance = [
+            {
+                name: "codigo",
+                label: "Código"
+            },
+            {
+                name: "nombre",
+                label: "Nombre"
+            },
+            {
+                name: "anio",
+                label: "Año"
+            },
+            {
+                name: "valor",
+                label: "Saldo"
+            },
+            {
+                name: "empresa_id",
+                label: "Empresa"
+            },
         ]
         return(
             <>
@@ -312,7 +378,7 @@ class Empresa extends Component{
                                     }
                                     />
                                     <Button component="span" variant="contained" startIcon={<FileUploadIcon />}>
-                                        Subir
+                                        Subir Catalogo
                                     </Button>
                                 </label>
                                 
@@ -326,6 +392,40 @@ class Empresa extends Component{
                             <Form.Group>
                                 <ButtonGroup onClick={this.guardarCatalogo}>
                                     <Button variant="contained" >Guardar Catálogo</Button>
+                                </ButtonGroup>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>
+                                    Suba su balance:  
+                                </Form.Label>
+                                <label htmlfor="archivo_input">
+                                      
+                                    <Input 
+                                    id="archivo_input_balance"
+                                    accept="xlsx" 
+                                    type="file" 
+                                    onChange={
+                                        (e)=>{
+                                            const file = e.target.files[0];
+                                            this.leerBalance(file)
+                                        }
+                                    }
+                                    />
+                                    <Button component="span" variant="contained" startIcon={<FileUploadIcon />}>
+                                        Subir Balance
+                                    </Button>
+                                </label>
+                                
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>
+                                    Datos desde Excel:
+                                </Form.Label>
+                                {this.state.balance != 0 ? <DataTable titulo="Balance"noRegistro="No se ha cargado ningun registro..."columnas={columnsBalance}datos={this.state.balance}/> : "" }
+                            </Form.Group>
+                            <Form.Group>
+                                <ButtonGroup onClick={this.guardarBalance}>
+                                    <Button variant="contained" >Guardar Balance</Button>
                                 </ButtonGroup>
                             </Form.Group>
                     </Form>

@@ -54,6 +54,7 @@ export default function DataTable(props) {
         </Col>
         <Col sm={10}>
           <MUIDataTable
+            id={props.id}
             title={props.titulo}
             data={props.datos}
             columns={props.columnas}

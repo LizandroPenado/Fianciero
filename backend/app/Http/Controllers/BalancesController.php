@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\balances;
+use App\Models\Cuenta;
 use Illuminate\Http\Request;
 
 class BalancesController extends Controller
@@ -40,7 +41,8 @@ class BalancesController extends Controller
         $balance->anio = $request->anio;
         $balance->valor = $request->valor;
         $balance->empresa_id = $request->empresa_id;
-        $balance->cuenta_id = $request->cuenta_id;
+        $cuenta_id = Cuenta::where('codigo', $request->cuenta_id)->first()->id;
+        $balance->cuenta_id = $cuenta_id;
         $balance->save();
     }
 

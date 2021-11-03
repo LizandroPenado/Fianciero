@@ -22,6 +22,7 @@ Route::get('/cuentas', 'App\Http\Controllers\CuentaController@index'); //Mostrar
 Route::post('/cuentas', 'App\Http\Controllers\CuentaController@store'); //Crear registro
 Route::put('/cuentas/{id}', 'App\Http\Controllers\CuentaController@update'); //Actualizar registro
 Route::delete('/cuentas/{id}', 'App\Http\Controllers\CuentaController@destroy'); //Eliminar registro
+Route::get('/getCuentaID', 'App\Http\Controllers\CuentaController@getCuentaID'); 
 
 //Sectores
 Route::get('/sectores', 'App\Http\Controllers\SectoresController@index'); //Mostrar todos los sectores

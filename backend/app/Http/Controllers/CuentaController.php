@@ -45,6 +45,19 @@ class CuentaController extends Controller
 
         $cuenta->save();
     }
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    
+     //Muestra el ID de la cuenta filtrado por su código
+    public function getCuentaID(Request $request)
+    {
+        //
+        $codigo = $request->codigo;
+        $cuenta = Cuenta::where('codigo',$codigo)->first();
+        return $cuenta;
+    }
 
     /**
      * Display the specified resource.

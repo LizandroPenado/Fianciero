@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\balances;
 use App\Models\Cuenta;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BalancesController extends Controller
 {
@@ -15,7 +16,8 @@ class BalancesController extends Controller
      */
     public function index()
     {
-        //
+        $balances = balances::with('empresa', 'cuenta', 'cuenta.rubro')->get();
+        return $balances;
     }
 
     /**
@@ -89,5 +91,33 @@ class BalancesController extends Controller
     public function destroy(balances $balances)
     {
         //
+    }
+
+    //Metodos analisis horizontal
+    public function horizontal(Request $request){
+        $empresa = $request->get('empresa');
+        $periodo = $request->get('periodo');
+        $rubro = $request->get('rubro');
+
+        $balances = DB::table('balances')
+        ->join('empresas', 'empresas.id', '=', 'balances.empresa_id')
+        ->join('cuentas', 'cuentas.id', '=', 'balances.cuenta_id')
+        ->select('balances.anio', 'balances.valor', 'cuentas.nombre')
+        ->where([['balances.empresa_id', '=', $empresa], ['balances.anio', '=', $periodo ], ['cuentas.rubro_id', '=', $rubro ]])
+        ->get();
+
+        return $balances;
+    }
+
+    public function periodo(Request $request){
+        $empresa = $request->get('empresa');
+
+        $periodos = DB::table('balances')->distinct()
+        ->join('empresas', 'empresas.id', '=', 'balances.empresa_id')
+        ->select('balances.anio')
+        ->where([['balances.empresa_id', '=', $empresa]])
+        ->get();
+
+        return $periodos;
     }
 }

@@ -40,3 +40,8 @@ Route::get('/ultimaEmpresa', 'App\Http\Controllers\EmpresasController@ultimaEmpr
 //Balances
 Route::get('/balances', 'App\Http\Controllers\BalancesController@index'); //Mostrar todos los registros de balances
 Route::post('/balances', 'App\Http\Controllers\BalancesController@store'); //Guarda los balances
+Route::get('/balances/horizontal', 'App\Http\Controllers\BalancesController@horizontal'); //Informacion para analisis Horizontal
+Route::get('/balances/periodo', 'App\Http\Controllers\BalancesController@periodo'); //Informacion de los periodos
+
+//Rubros
+Route::get('/rubros', 'App\Http\Controllers\RubrosController@index'); //Mostrar todos los registros de rubros

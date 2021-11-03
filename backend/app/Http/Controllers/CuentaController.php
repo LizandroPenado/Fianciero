@@ -14,7 +14,7 @@ class CuentaController extends Controller
      */
     public function index()
     {
-        $cuentas = Cuenta::all();
+        $cuentas = Cuenta::with('empresa', 'rubro')->get();
         return $cuentas;
     }
 

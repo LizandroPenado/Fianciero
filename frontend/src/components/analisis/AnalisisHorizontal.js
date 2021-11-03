@@ -5,23 +5,7 @@ import ReactToPrint from "react-to-print";
 import Opciones from "./Opciones";
 import TablaAnalisis from "./TablaAnalisis";
 import "./Analisis.css";
-
-/* Este arreglo crearia para mostrar en la tabla */
-const periodoInicio = [
-  { nombre: "Caja", rubro: "Activos", periodo: 2018, saldo: 10000 },
-  { nombre: "Bancos", rubro: "Activos", periodo: 2018, saldo: 20000 },
-  /* { nombre: "Proveedores", rubro: "Pasivos", periodo: 2018, saldo: 20000 },
-  { nombre: "Impuestos", rubro: "Pasivos", periodo: 2018, saldo: 15000 }, */
-];
-const periodoFin = [
-  { nombre: "Caja", rubro: "Activos", periodo: 2019, saldo: 12000 },
-  { nombre: "Bancos", rubro: "Activos", periodo: 2019, saldo: 15000 },
-  /* { nombre: "Proveedores", rubro: "Pasivos", periodo: 2019, saldo: 35000 },
-  { nombre: "Impuestos", rubro: "Pasivos", periodo: 2019, saldo: 5000 }, */
-];
-
-/* Este arreglo crearia para los periodos */
-const periodos = [2019, 2020];
+import axios from "axios";
 
 class AnalisisHorizontal extends Component {
   constructor(props) {
@@ -29,8 +13,11 @@ class AnalisisHorizontal extends Component {
     this.state = {
       cuentas: [],
       periodos: [],
-      analisisHorizontal: {
-        cuenta: "",
+      periodoInicio: [],
+      periodoFin: [],
+      rubros: [],
+      analisisHorizontal: { /* Si se guardara el analisis */ 
+        cuenta: "", 
         saldoInicial: 0.0,
         saldoFinal: 0.0,
         absoluto: 0.0,
@@ -44,6 +31,33 @@ class AnalisisHorizontal extends Component {
     };
   }
 
+  componentDidMount() {
+    //informacion de los periodos
+    axios
+      .get("http://127.0.0.1:8000/api/balances/periodo/", {
+        params: {
+          empresa: 1 /* Cambiar cuando haya logeo */,
+        },
+      })
+      .then((response) => {
+        this.setState({ periodos: response.data });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    //Informacion de los rubros
+    axios
+      .get("http://127.0.0.1:8000/api/rubros/")
+      .then((response) => {
+        this.setState({ rubros: response.data });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  //Metodo para almacenar los datos ingresados por el usuario
   handleChange = async (e) => {
     e.persist();
     await this.setState({
@@ -54,67 +68,54 @@ class AnalisisHorizontal extends Component {
     });
   };
 
+  peticionGet = async () => {
+    //Obtener periodo de incio
+    axios
+      .get("http://127.0.0.1:8000/api/balances/horizontal/", {
+        params: {
+          empresa: 1 /* Cambiar cuando haya logeo */,
+          periodo: this.state.form.periodoInicio,
+          rubro: this.state.form.rubro,
+        },
+      })
+      .then((response) => {
+        this.setState({ periodoInicio: response.data });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    //Obtener periodo de fin
+    axios
+      .get("http://127.0.0.1:8000/api/balances/horizontal/", {
+        params: {
+          empresa: 1 /* Cambiar cuando haya logeo */,
+          periodo: this.state.form.periodoFin,
+          rubro: this.state.form.rubro,
+        },
+      })
+      .then((response) => {
+        this.setState({ periodoFin: response.data });
+        //Metodo para el calculo del analisis
+        this.calculo();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  //Metodo que realiza el calculo del analisis horizontal
   calculo() {
-    //this.peticionGet();
     const cuenta = [];
-    for (var i = 0; i < periodoInicio.length; i++) {
+    for (var i = 0; i < this.state.periodoInicio.length; i++) {
       cuenta[i] = {
-        nombre: periodoInicio[i].nombre,
-        saldoInicio: periodoInicio[i].saldo,
-        saldoFin: periodoFin[i].saldo,
+        nombre: this.state.periodoInicio[i].nombre,
+        saldoInicio: this.state.periodoInicio[i].valor,
+        saldoFin: this.state.periodoFin[i].valor,
       };
     }
     this.setState({ cuentas: cuenta });
-    console.log(cuenta);
-    console.log(this.state.form.periodoInicio);
-    console.log(this.state.form.periodoFin);
-    console.log(this.state.form.rubro);
   }
-
-  peticionGet = async () => {
-    //Obtener periodo de incio
-    /* axios
-    .get(url, {
-      params: {
-        user: nombreUsuario,
-        periodo: this.state.form.periodoInicio,
-        rubro: this.state.form.rubro,
-      },
-    })
-    .then((response)=>{
-      const arregloInicial = response.data;
-      const periodo = [];
-      for(var i=0; i<arregloInicial.length; i++){
-        periodo[i] = {
-          nombre: arregloInicial[i].nombre,
-          periodo: arregloInicial[i].balance.periodo,
-          saldo: arregloInicial[i].balance.saldo,
-        };
-      }
-      this.setState({periodoInicio: periodo})
-    }) */
-    //Obtener periodo de fin
-    /* axios
-    .get(url, {
-      params: {
-        user: nombre_usuario,
-        periodo: this.state.form.periodoFin,
-        rubro: this.state.form.rubro,
-      },
-    })
-    .then((response)=>{
-      const arregloInicial = response.data;
-      const periodo = [];
-      for(var i=0; i<arregloInicial.length; i++){
-        periodo[i] = {
-          nombre: arregloInicial[i].nombre,
-          periodo: arregloInicial[i].balance.periodo,
-          saldo: arregloInicial[i].balance.saldo,
-        };
-      }
-      this.setState({periodoFin: periodo})
-    }) */
-  };
 
   render() {
     const { form } = this.state;
@@ -132,11 +133,10 @@ class AnalisisHorizontal extends Component {
                     value={form.periodoInicio}
                     onChange={this.handleChange}
                   >
-                    <option value="">Seleccione...</option>
-                    {/* Cambiar periodo por el estado */}
-                    {periodos.map((elemento) => (
-                      <option key={elemento} value={elemento}>
-                        {elemento}
+                    <option value="" disabled={true}>Seleccione...</option>
+                    {this.state.periodos.map((elemento) => (
+                      <option key={elemento.anio} value={elemento.anio}>
+                        {elemento.anio}
                       </option>
                     ))}
                   </Form.Select>
@@ -151,11 +151,10 @@ class AnalisisHorizontal extends Component {
                     value={form.periodoFin}
                     onChange={this.handleChange}
                   >
-                    <option value="">Seleccione...</option>
-                    {/* Cambiar periodo por el estado */}
-                    {periodos.map((elemento) => (
-                      <option key={elemento} value={elemento}>
-                        {elemento}
+                    <option value="" disabled={true}>Seleccione...</option>
+                    {this.state.periodos.map((elemento) => (
+                      <option key={elemento.anio} value={elemento.anio}>
+                        {elemento.anio}
                       </option>
                     ))}
                   </Form.Select>
@@ -170,23 +169,19 @@ class AnalisisHorizontal extends Component {
                     value={form.rubro}
                     onChange={this.handleChange}
                   >
-                    <option value="">Seleccione...</option>
-                    <option key="activo" value="activo">
-                      Activo
-                    </option>
-                    <option key="pasivo" value="pasivo">
-                      Pasivo
-                    </option>
-                    <option key="patrimonio" value="patrimonio">
-                      Patrimonio
-                    </option>
+                    <option value="" disabled={true}>Seleccione...</option>
+                    {this.state.rubros.map((elemento) => (
+                      <option key={elemento.id} value={elemento.id}>
+                        {elemento.nombre}
+                      </option>
+                    ))}
                   </Form.Select>
                 </Form.Group>
               </Col>
             </>
           }
           botonAnalisis={
-            <Button variant="success" onClick={() => this.calculo()}>
+            <Button variant="success" onClick={() => this.peticionGet()}>
               Realizar análisis
             </Button>
           }
@@ -194,12 +189,13 @@ class AnalisisHorizontal extends Component {
             <ReactToPrint
               trigger={() => <Button variant="secondary">Imprimir</Button>}
               content={() => this.componentRef}
+              documentTitle={"Analisis Horizontal " + form.periodoInicio+"-"+form.periodoFin}
             />
           }
         />
         <TablaAnalisis
           ref={(el) => (this.componentRef = el)}
-          tituloTabla={"Analisis Horizontal  " + form.rubro}
+          tituloTabla={"Analisis Horizontal  "}
           columnas={
             <>
               <th>Cuenta</th>
@@ -211,20 +207,29 @@ class AnalisisHorizontal extends Component {
           }
           filas={
             <>
-              {this.state.cuentas.map((elemento) => (
+              {this.state.periodoInicio.length >= 1 &&
+              this.state.periodoFin.length >= 1 ? (
+                this.state.cuentas.map((elemento) => (
+                  <tr>
+                    <td>{elemento.nombre}</td>
+                    <td>{elemento.saldoInicio}</td>
+                    <td>{elemento.saldoFin}</td>
+                    <td>
+                      {(elemento.saldoFin - elemento.saldoInicio).toFixed(2)}
+                    </td>
+                    <td>
+                      {(
+                        (elemento.saldoFin / elemento.saldoInicio - 1) *
+                        100
+                      ).toFixed(2) + " %"}
+                    </td>
+                  </tr>
+                ))
+              ) : (
                 <tr>
-                  <td>{elemento.nombre}</td>
-                  <td>{elemento.saldoInicio}</td>
-                  <td>{elemento.saldoFin}</td>
-                  <td>{elemento.saldoFin - elemento.saldoInicio}</td>
-                  <td>
-                    {(
-                      (elemento.saldoFin / elemento.saldoInicio - 1) *
-                      100
-                    ).toFixed(2) + " %"}
-                  </td>
+                  <td colSpan="5">No hay registros</td>
                 </tr>
-              ))}
+              )}
             </>
           }
         />

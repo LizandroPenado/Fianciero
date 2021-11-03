@@ -4,24 +4,21 @@ import { Col, Form } from "react-bootstrap";
 import ReactToPrint from "react-to-print";
 import Opciones from "./Opciones";
 import TablaAnalisis from "./TablaAnalisis";
-import "./Analisis.css"
-
+import "./Analisis.css";
 
 /* Este arreglo crearia para mostrar en la tabla */
-const cuentas = [
-  { cuenta: "Caja", saldoInicial: 10000, saldoFinal: 12000 },
-  { cuenta: "Bancos", saldoInicial: 20000, saldoFinal: 15000 },
+const periodoInicio = [
+  { nombre: "Caja", rubro: "Activos", periodo: 2018, saldo: 10000 },
+  { nombre: "Bancos", rubro: "Activos", periodo: 2018, saldo: 20000 },
+  /* { nombre: "Proveedores", rubro: "Pasivos", periodo: 2018, saldo: 20000 },
+  { nombre: "Impuestos", rubro: "Pasivos", periodo: 2018, saldo: 15000 }, */
 ];
-
-/* Esto traeria de la BD */
-/* const balance2019 = [
-  { cuenta: "Caja", saldo: 10000, periodo: 2019},
-  { cuenta: "Bancos", saldo: 20000, periodo: 2019},
+const periodoFin = [
+  { nombre: "Caja", rubro: "Activos", periodo: 2019, saldo: 12000 },
+  { nombre: "Bancos", rubro: "Activos", periodo: 2019, saldo: 15000 },
+  /* { nombre: "Proveedores", rubro: "Pasivos", periodo: 2019, saldo: 35000 },
+  { nombre: "Impuestos", rubro: "Pasivos", periodo: 2019, saldo: 5000 }, */
 ];
-const balance2020 = [
-  { cuenta: "Caja", saldo: 12000, periodo: 2020 },
-  { cuenta: "Bancos", saldo: 15000, periodo: 2020 },
-]; */
 
 /* Este arreglo crearia para los periodos */
 const periodos = [2019, 2020];
@@ -40,9 +37,9 @@ class AnalisisHorizontal extends Component {
         relativo: "",
       },
       form: {
-        periodoInicio: 0,
-        periodoFin: 0,
-        estadoFinanciero: "",
+        periodoInicio: "",
+        periodoFin: "",
+        rubro: "",
       },
     };
   }
@@ -55,6 +52,68 @@ class AnalisisHorizontal extends Component {
         [e.target.name]: e.target.value,
       },
     });
+  };
+
+  calculo() {
+    //this.peticionGet();
+    const cuenta = [];
+    for (var i = 0; i < periodoInicio.length; i++) {
+      cuenta[i] = {
+        nombre: periodoInicio[i].nombre,
+        saldoInicio: periodoInicio[i].saldo,
+        saldoFin: periodoFin[i].saldo,
+      };
+    }
+    this.setState({ cuentas: cuenta });
+    console.log(cuenta);
+    console.log(this.state.form.periodoInicio);
+    console.log(this.state.form.periodoFin);
+    console.log(this.state.form.rubro);
+  }
+
+  peticionGet = async () => {
+    //Obtener periodo de incio
+    /* axios
+    .get(url, {
+      params: {
+        user: nombreUsuario,
+        periodo: this.state.form.periodoInicio,
+        rubro: this.state.form.rubro,
+      },
+    })
+    .then((response)=>{
+      const arregloInicial = response.data;
+      const periodo = [];
+      for(var i=0; i<arregloInicial.length; i++){
+        periodo[i] = {
+          nombre: arregloInicial[i].nombre,
+          periodo: arregloInicial[i].balance.periodo,
+          saldo: arregloInicial[i].balance.saldo,
+        };
+      }
+      this.setState({periodoInicio: periodo})
+    }) */
+    //Obtener periodo de fin
+    /* axios
+    .get(url, {
+      params: {
+        user: nombre_usuario,
+        periodo: this.state.form.periodoFin,
+        rubro: this.state.form.rubro,
+      },
+    })
+    .then((response)=>{
+      const arregloInicial = response.data;
+      const periodo = [];
+      for(var i=0; i<arregloInicial.length; i++){
+        periodo[i] = {
+          nombre: arregloInicial[i].nombre,
+          periodo: arregloInicial[i].balance.periodo,
+          saldo: arregloInicial[i].balance.saldo,
+        };
+      }
+      this.setState({periodoFin: periodo})
+    }) */
   };
 
   render() {
@@ -104,26 +163,33 @@ class AnalisisHorizontal extends Component {
               </Col>
               <Col md="auto pt-2">
                 <Form.Group>
-                  <Form.Label>Estado financiero</Form.Label>
+                  <Form.Label>Rubro</Form.Label>
                   <Form.Select
-                    id="estadoFinanciero"
-                    name="estadoFinanciero"
-                    value={form.estadoFinanciero}
+                    id="rubro"
+                    name="rubro"
+                    value={form.rubro}
                     onChange={this.handleChange}
                   >
                     <option value="">Seleccione...</option>
-                    <option key="Balance General" value="Balance General">
-                      Balance general
+                    <option key="activo" value="activo">
+                      Activo
                     </option>
-                    <option key="Estado Resultado" value="Estado Resultado">
-                      Estado de resultado
+                    <option key="pasivo" value="pasivo">
+                      Pasivo
+                    </option>
+                    <option key="patrimonio" value="patrimonio">
+                      Patrimonio
                     </option>
                   </Form.Select>
                 </Form.Group>
               </Col>
             </>
           }
-          botonAnalisis={<Button variant="success">Realizar análisis</Button>}
+          botonAnalisis={
+            <Button variant="success" onClick={() => this.calculo()}>
+              Realizar análisis
+            </Button>
+          }
           botonImprimir={
             <ReactToPrint
               trigger={() => <Button variant="secondary">Imprimir</Button>}
@@ -133,7 +199,7 @@ class AnalisisHorizontal extends Component {
         />
         <TablaAnalisis
           ref={(el) => (this.componentRef = el)}
-          tituloTabla={"Analisis Horizontal  " + form.estadoFinanciero}
+          tituloTabla={"Analisis Horizontal  " + form.rubro}
           columnas={
             <>
               <th>Cuenta</th>
@@ -145,16 +211,17 @@ class AnalisisHorizontal extends Component {
           }
           filas={
             <>
-              {cuentas.map((elemento) => (
+              {this.state.cuentas.map((elemento) => (
                 <tr>
-                  <td>{elemento.cuenta}</td>
-                  <td>{elemento.saldoInicial}</td>
-                  <td>{elemento.saldoFinal}</td>
-                  <td>{elemento.saldoFinal - elemento.saldoInicial}</td>
+                  <td>{elemento.nombre}</td>
+                  <td>{elemento.saldoInicio}</td>
+                  <td>{elemento.saldoFin}</td>
+                  <td>{elemento.saldoFin - elemento.saldoInicio}</td>
                   <td>
-                    {(elemento.saldoFinal / elemento.saldoInicial - 1).toFixed(
-                      2
-                    ) + " %"}
+                    {(
+                      (elemento.saldoFin / elemento.saldoInicio - 1) *
+                      100
+                    ).toFixed(2) + " %"}
                   </td>
                 </tr>
               ))}

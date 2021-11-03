@@ -4,19 +4,18 @@ import { Col, Form } from "react-bootstrap";
 import ReactToPrint from "react-to-print";
 import Opciones from "./Opciones";
 import TablaAnalisis from "./TablaAnalisis";
-import "./Analisis.css"
+import "./Analisis.css";
 
 /* Este arreglo crearia para mostrar en la tabla */
-const cuentas = [
-  { cuenta: "Efectivo", saldo: 9000, total: 1468800 },
-  { cuenta: "Cuentar por cobrar", saldo: 351200, total: 1468800 },
+const cuentasPeriodo = [
+  { nombre: "Caja", tipoCuenta: "Activo circulante", rubro: "Activos", periodo: 2018, saldo: 10000 },
+  { nombre: "Bancos", tipoCuenta: "Activo circulante", rubro: "Activos", periodo: 2018, saldo: 20000 },
+  { nombre: "Inversiones", tipoCuenta: "Activo circulante", rubro: "Activos", periodo: 2018, saldo: 40000 },
+  { nombre: "Clientes", tipoCuenta: "Activo circulante", rubro: "Activos", periodo: 2018, saldo: 20000 },
+  { nombre: "Inventarios", tipoCuenta: "Activo circulante", rubro: "Activos", periodo: 2018, saldo: 40000 },
+  { nombre: "Activos fijos", tipoCuenta: "Activo circulante", rubro: "Activos", periodo: 2018, saldo: 60000 },
+  { nombre: "Diferidos", tipoCuenta: "Activo circulante", rubro: "Activos", periodo: 2018, saldo: 10000 },
 ];
-
-/* Esto traeria de la BD */
-/* const balance2019 = [
-  { cuenta: "Efectivo", saldo: 9000, periodo: 2019},
-  { cuenta: "Cuentar por cobrar", saldo: 351200, periodo: 2019},
-]; */
 
 /* Este arreglo crearia para los periodos */
 const periodos = [2019, 2020];
@@ -27,14 +26,15 @@ class AnalisisVertical extends Component {
     this.state = {
       cuentas: [],
       periodos: [],
+      totalRubro: 0,
       analisisVertical: {
         cuenta: "",
         saldo: 0.0,
         vertical: "",
       },
       form: {
-        periodo: 0,
-        estadoFinanciero: "",
+        periodo: "",
+        rubro: "",
       },
     };
   }
@@ -47,6 +47,49 @@ class AnalisisVertical extends Component {
         [e.target.name]: e.target.value,
       },
     });
+  };
+
+  calculo() {
+    //this.peticionGet();
+    const cuenta = [];
+    var total = 0;
+    for (var i = 0; i < cuentasPeriodo.length; i++) {
+      cuenta[i] = {
+        nombre: cuentasPeriodo[i].nombre,
+        tipoCuenta: cuentasPeriodo[i].tipoCuenta,
+        saldo: cuentasPeriodo[i].saldo,
+      };
+      total += cuentasPeriodo[i].saldo;
+    }
+    this.setState({ cuentas: cuenta, totalRubro: total });
+    console.log(cuenta);
+    console.log(this.state.form.periodo);
+    console.log(this.state.form.rubro);
+    console.log(total);
+    console.log(this.state.totalRubro);
+  }
+
+  peticionGet = async () => {
+    /* axios
+    .get(url, {
+      params: {
+        user: nombreUsuario,
+        periodo: this.state.form.periodo,
+        rubro: this.state.form.rubro,
+      },
+    })
+    .then((response)=>{
+      const arregloInicial = response.data;
+      const cuenta = [];
+      for(var i=0; i<arregloInicial.length; i++){
+        cuenta[i] = {
+          nombre: arregloInicial[i].nombre,
+          periodo: arregloInicial[i].balance.balance,
+          saldo: arregloInicial[i].balance.saldo,
+        };
+      }
+      this.setState({cuentas: cuenta})
+    }) */
   };
 
   render() {
@@ -78,26 +121,29 @@ class AnalisisVertical extends Component {
                 </Col>
                 <Col md="auto pt-2">
                   <Form.Group>
-                    <Form.Label>Estado financiero</Form.Label>
+                    <Form.Label>Rubro</Form.Label>
                     <Form.Select
-                      id="estadoFinanciero"
-                      name="estadoFinanciero"
-                      value={form.estadoFinanciero}
+                      id="rubro"
+                      name="rubro"
+                      value={form.rubro}
                       onChange={this.handleChange}
                     >
                       <option value="">Seleccione...</option>
-                      <option key="Balance General" value="Balance General">
-                        Balance general
+                      <option key="activo" value="activo">
+                        Activo
                       </option>
-                      <option key="Estado Resultado" value="Estado Resultado">
-                        Estado de resultado
+                      <option key="pasivo" value="pasivo">
+                        Pasivo
+                      </option>
+                      <option key="patrimonio" value="patrimonio">
+                        Patrimonio
                       </option>
                     </Form.Select>
                   </Form.Group>
                 </Col>
               </>
             }
-            botonAnalisis={<Button variant="success">Realizar análisis</Button>}
+            botonAnalisis={<Button variant="success" onClick={() => this.calculo()}>Realizar análisis</Button>}
             botonImprimir={
               <ReactToPrint
                 trigger={() => <Button variant="secondary">Imprimir</Button>}
@@ -109,22 +155,22 @@ class AnalisisVertical extends Component {
         <div id="tabla">
           <TablaAnalisis
             ref={(el) => (this.componentRef = el)}
-            tituloTabla={"Analisis Vertical  " + form.estadoFinanciero}
+            tituloTabla={"Analisis Vertical  " + form.rubro}
             columnas={
               <>
                 <th>Cuenta</th>
                 <th>Periodo {form.periodo}</th>
-                <th>{form.periodo}</th>
+                <th>Analísis vetical</th>
               </>
             }
             filas={
               <>
-                {cuentas.map((elemento) => (
+                {this.state.cuentas.map((elemento) => (
                   <tr>
-                    <td>{elemento.cuenta}</td>
+                    <td>{elemento.nombre}</td>
                     <td>{elemento.saldo}</td>
                     <td>
-                      {((elemento.saldo / elemento.total) * 100).toFixed(2) +
+                      {((elemento.saldo / this.state.totalRubro) * 100).toFixed(2) +
                         " %"}
                     </td>
                   </tr>

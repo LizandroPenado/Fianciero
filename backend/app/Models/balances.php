@@ -13,6 +13,9 @@ class balances extends Model
         return $this->belongsTo('App\Models\Empresas');
     }
     public function cuenta(){
-        return $this->hasOne('App\Models\Cuenta');
+        return $this->belongsTo('App\Models\Cuenta');
+    }
+    function rubro(){
+        return $this->belongsTo('\App\Models\Rubros');
     }
 }

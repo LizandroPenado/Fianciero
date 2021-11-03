@@ -20,7 +20,7 @@ class CreateBalancesTable extends Migration
             $table->decimal("valor",6,2);
             $table->unsignedBigInteger('empresa_id');
             $table->foreign('empresa_id')->references('id')->on('empresas')->onDelete('cascade');
-            $table->unsignedBigInteger('cuenta_id')->unique();
+            $table->unsignedBigInteger('cuenta_id');
             $table->foreign('cuenta_id')->references('id')->on('cuentas')->onDelete('cascade');
         });
     }

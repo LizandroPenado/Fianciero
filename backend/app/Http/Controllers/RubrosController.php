@@ -14,7 +14,8 @@ class RubrosController extends Controller
      */
     public function index()
     {
-        //
+        $rubros = Rubros::all();
+        return $rubros;
     }
 
     /**

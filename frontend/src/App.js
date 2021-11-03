@@ -9,7 +9,7 @@ import AnalisisVertical from "./components/analisis/AnalisisVertical";
 import AnalisisHorizontal from "./components/analisis/AnalisisHorizontal";
 import Typography from "@material-ui/core/Typography";
 // import Cuenta from "./components/cuenta/Cuenta";
-import Empresa from "./components/empresa/Empresa"
+import Empresa from "./components/Empresa/Empresa"
 
 export default function App() {
   return (

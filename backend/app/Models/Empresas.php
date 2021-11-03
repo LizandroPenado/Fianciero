@@ -12,4 +12,7 @@ class Empresas extends Model
     public function actividad(){
         return $this->belongsTo('App\Models\ActividadEconomica');
     }
+    public function balance(){
+        return $this->belongsTo('App\Models\balances');
+    }
 }

@@ -14,7 +14,7 @@ export default class TablaAnalisis extends Component {
           <Label>{this.props.tituloTabla}</Label>
         </div>
         <div>
-          <Table responsive="sm" className="text-center" hover={false}>
+          <Table responsive="sm" className="text-center" hover={false} id="analisis">
             <thead>
               <tr>{this.props.columnas}</tr>
             </thead>

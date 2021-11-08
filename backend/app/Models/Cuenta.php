@@ -8,5 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Cuenta extends Model
 {
     use HasFactory;
-    protected $fillable = ['codigo', 'nombre', 'tipo'];
+    protected $fillable = ['nombre', 'rubro_id', 'tipo_id','empresa_id'];
+    function rubro(){
+        return $this->belongsTo('\App\Models\Rubros');
+    }
+    function empresa(){
+        return $this->belongsTo('App\Models\Empresas');
+    }
+    
 }

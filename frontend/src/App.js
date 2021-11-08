@@ -8,8 +8,10 @@ import Rol from "./components/rol/Rol";
 import AnalisisVertical from "./components/analisis/AnalisisVertical";
 import AnalisisHorizontal from "./components/analisis/AnalisisHorizontal";
 import Typography from "@material-ui/core/Typography";
+// import Cuenta from "./components/cuenta/Cuenta";
+import Empresa from "./components/Empresa/Empresa"
 
-function App() {
+export default function App() {
   return (
     <main /* className={classes.content} */>
       <Router>
@@ -18,6 +20,8 @@ function App() {
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/login" component={Login} />
+          {/* <Route path="/cuenta" component={Cuenta} /> */}
+          <Route path="/empresa" component={Empresa} />
           {/* <Route path="/informacion" component={Login} /> */}
           {/* <Route path="/sector" component={Rol} /> */}
           <Route path="/rol" component={Rol} />
@@ -38,4 +42,3 @@ function App() {
   );
 }
 
-export default App;

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Cuenta;
-
-class CuentaController extends Controller
+use App\Models\Sectores;
+class SectoresController extends Controller
 {
+    //
     /**
      * Display a listing of the resource.
      *
@@ -14,8 +14,8 @@ class CuentaController extends Controller
      */
     public function index()
     {
-        $cuentas = Cuenta::with('empresa', 'rubro')->get();
-        return $cuentas;
+        $sectores = Sectores::all();
+        return $sectores;
     }
 
     /**
@@ -36,27 +36,11 @@ class CuentaController extends Controller
      */
     public function store(Request $request)
     {
-        $cuenta = new Cuenta();
-        $cuenta->codigo = $request->codigo;
-        $cuenta->nombre =  $request->nombre;
-        $cuenta->rubro_id = $request->rubro_id;
-        $cuenta->tipo_id =  $request->tipo_id;
-        $cuenta->empresa_id =  $request->empresa_id;
+        $sectores = new Sectores();
+        $sectores->nombre =  $request->nombre;
+        $sectores->descripcion =  $request->descripcion;
 
         $cuenta->save();
-    }
-    /**
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    
-     //Muestra el ID de la cuenta filtrado por su código
-    public function getCuentaID(Request $request)
-    {
-        //
-        $codigo = $request->codigo;
-        $cuenta = Cuenta::where('codigo',$codigo)->first();
-        return $cuenta;
     }
 
     /**
@@ -90,13 +74,12 @@ class CuentaController extends Controller
      */
     public function update(Request $request)
     {
-        $cuenta = Cuenta::findOrFail($request->id);
-        $cuenta->codigo =  $request->codigo;
-        $cuenta->rubro_id = $request->rubrop_id;
-        $cuenta->tipo_id =  $request->tipo_id;
+        $sectores = Sectores::findOrFail($request->id);
+        $sectores->nombre =  $request->nombre;
+        $sectores->descripcion =  $request->tipo;
 
-        $cuenta->save();
-        return $cuenta;
+        $sectores->save();
+        return $sectores;
     }
 
     /**
@@ -107,7 +90,7 @@ class CuentaController extends Controller
      */
     public function destroy($request)
     {
-        $cuenta = Cuenta::destroy($request->id);
-        return $cuenta;
+        $sectores = Sectores::destroy($request->id);
+        return $sectores;
     }
 }

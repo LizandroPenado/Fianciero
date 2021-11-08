@@ -93,30 +93,41 @@ class BalancesController extends Controller
         //
     }
 
-    //Metodos analisis horizontal
-    public function horizontal(Request $request){
+    //Metodos analisis
+    public function analisis(Request $request)
+    {
         $empresa = $request->get('empresa');
         $periodo = $request->get('periodo');
         $rubro = $request->get('rubro');
 
-        $balances = DB::table('balances')
-        ->join('empresas', 'empresas.id', '=', 'balances.empresa_id')
-        ->join('cuentas', 'cuentas.id', '=', 'balances.cuenta_id')
-        ->select('balances.anio', 'balances.valor', 'cuentas.nombre')
-        ->where([['balances.empresa_id', '=', $empresa], ['balances.anio', '=', $periodo ], ['cuentas.rubro_id', '=', $rubro ]])
-        ->get();
+        if ($rubro == "todo") {
+            $balances = DB::table('balances')
+                ->join('empresas', 'empresas.id', '=', 'balances.empresa_id')
+                ->join('cuentas', 'cuentas.id', '=', 'balances.cuenta_id')
+                ->select('balances.anio', 'balances.valor', 'cuentas.nombre', 'cuentas.id')
+                ->where([['balances.empresa_id', '=', $empresa], ['balances.anio', '=', $periodo]])
+                ->get();
+        } else {
+            $balances = DB::table('balances')
+                ->join('empresas', 'empresas.id', '=', 'balances.empresa_id')
+                ->join('cuentas', 'cuentas.id', '=', 'balances.cuenta_id')
+                ->select('balances.anio', 'balances.valor', 'cuentas.nombre', 'cuentas.id')
+                ->where([['balances.empresa_id', '=', $empresa], ['balances.anio', '=', $periodo], ['cuentas.rubro_id', '=', $rubro]])
+                ->get();
+        }
 
         return $balances;
     }
 
-    public function periodo(Request $request){
+    public function periodo(Request $request)
+    {
         $empresa = $request->get('empresa');
 
         $periodos = DB::table('balances')->distinct()
-        ->join('empresas', 'empresas.id', '=', 'balances.empresa_id')
-        ->select('balances.anio')
-        ->where([['balances.empresa_id', '=', $empresa]])
-        ->get();
+            ->join('empresas', 'empresas.id', '=', 'balances.empresa_id')
+            ->select('balances.anio')
+            ->where([['balances.empresa_id', '=', $empresa]])
+            ->get();
 
         return $periodos;
     }

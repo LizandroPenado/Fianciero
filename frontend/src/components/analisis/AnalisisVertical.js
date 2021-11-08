@@ -1,24 +1,13 @@
 import React, { Component } from "react";
-import { Button } from "react-bootstrap";
-import { Col, Form } from "react-bootstrap";
+import { Col, Form, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import ReactToPrint from "react-to-print";
 import Opciones from "./Opciones";
 import TablaAnalisis from "./TablaAnalisis";
 import "./Analisis.css";
-
-/* Este arreglo crearia para mostrar en la tabla */
-const cuentasPeriodo = [
-  { nombre: "Caja", tipoCuenta: "Activo circulante", rubro: "Activos", periodo: 2018, saldo: 10000 },
-  { nombre: "Bancos", tipoCuenta: "Activo circulante", rubro: "Activos", periodo: 2018, saldo: 20000 },
-  { nombre: "Inversiones", tipoCuenta: "Activo circulante", rubro: "Activos", periodo: 2018, saldo: 40000 },
-  { nombre: "Clientes", tipoCuenta: "Activo circulante", rubro: "Activos", periodo: 2018, saldo: 20000 },
-  { nombre: "Inventarios", tipoCuenta: "Activo circulante", rubro: "Activos", periodo: 2018, saldo: 40000 },
-  { nombre: "Activos fijos", tipoCuenta: "Activo circulante", rubro: "Activos", periodo: 2018, saldo: 60000 },
-  { nombre: "Diferidos", tipoCuenta: "Activo circulante", rubro: "Activos", periodo: 2018, saldo: 10000 },
-];
-
-/* Este arreglo crearia para los periodos */
-const periodos = [2019, 2020];
+import axios from "axios";
+import Swal from "sweetalert2";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 
 class AnalisisVertical extends Component {
   constructor(props) {
@@ -26,12 +15,17 @@ class AnalisisVertical extends Component {
     this.state = {
       cuentas: [],
       periodos: [],
-      totalRubro: 0,
-      analisisVertical: {
-        cuenta: "",
-        saldo: 0.0,
-        vertical: "",
-      },
+      rubros: [],
+      totalRubro: 0.0,
+      rubro: "",
+      cantidadFilas: 0,
+      analisisVertical: [
+        {
+          cuenta: "",
+          saldo: 0.0,
+          vertical: "",
+        },
+      ],
       form: {
         periodo: "",
         rubro: "",
@@ -39,6 +33,33 @@ class AnalisisVertical extends Component {
     };
   }
 
+  componentDidMount() {
+    //informacion de los periodos
+    axios
+      .get("http://127.0.0.1:8000/api/balances/periodo/", {
+        params: {
+          empresa: 1 /* Cambiar cuando haya logeo */,
+        },
+      })
+      .then((response) => {
+        this.setState({ periodos: response.data });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    //Informacion de los rubros
+    axios
+      .get("http://127.0.0.1:8000/api/rubros/")
+      .then((response) => {
+        this.setState({ rubros: response.data });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  //Metodo para almacenar los datos ingresados por el usuario
   handleChange = async (e) => {
     e.persist();
     await this.setState({
@@ -49,48 +70,113 @@ class AnalisisVertical extends Component {
     });
   };
 
+  //Obtiene los datos de la BD
+  peticionGet = async () => {
+    axios
+      .get("http://127.0.0.1:8000/api/balances/analisis/", {
+        params: {
+          empresa: 1 /* Cambiar cuando haya logeo */,
+          periodo: this.state.form.periodo,
+          rubro: this.state.form.rubro,
+        },
+      })
+      .then((response) => {
+        this.setState({
+          cuentas: response.data,
+          cantidadFilas: response.data.length,
+        });
+        //Metodo para el calculo del analisis
+        this.calculo();
+        //Metodo para guardar el analisis
+        this.peticionPost();
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({ rubro: "" });
+      });
+  };
+
   calculo() {
-    //this.peticionGet();
-    const cuenta = [];
-    var total = 0;
-    for (var i = 0; i < cuentasPeriodo.length; i++) {
-      cuenta[i] = {
-        nombre: cuentasPeriodo[i].nombre,
-        tipoCuenta: cuentasPeriodo[i].tipoCuenta,
-        saldo: cuentasPeriodo[i].saldo,
-      };
-      total += cuentasPeriodo[i].saldo;
+    var total = 0.0;
+    for (var i = 0; i < this.state.cuentas.length; i++) {
+      total += parseFloat(this.state.cuentas[i].valor);
     }
-    this.setState({ cuentas: cuenta, totalRubro: total });
-    console.log(cuenta);
-    console.log(this.state.form.periodo);
-    console.log(this.state.form.rubro);
-    console.log(total);
-    console.log(this.state.totalRubro);
+    for (var j = 0; j < this.state.rubros.length; j++) {
+      if (
+        parseInt(this.state.form.rubro) === parseInt(this.state.rubros[j].id)
+      ) {
+        this.setState({ rubro: this.state.rubros[j].nombre });
+      }
+    }
+    this.setState({ totalRubro: total });
   }
 
-  peticionGet = async () => {
-    /* axios
-    .get(url, {
-      params: {
-        user: nombreUsuario,
-        periodo: this.state.form.periodo,
-        rubro: this.state.form.rubro,
-      },
-    })
-    .then((response)=>{
-      const arregloInicial = response.data;
-      const cuenta = [];
-      for(var i=0; i<arregloInicial.length; i++){
-        cuenta[i] = {
-          nombre: arregloInicial[i].nombre,
-          periodo: arregloInicial[i].balance.balance,
-          saldo: arregloInicial[i].balance.saldo,
-        };
-      }
-      this.setState({cuentas: cuenta})
-    }) */
+  peticionPost = async () => {
+    axios
+      .get("http://127.0.0.1:8000/api/analisisVertical/existencia/", {
+        params: {
+          empresa: 1,
+          periodo: this.state.form.periodo,
+          rubro: this.state.form.rubro,
+        },
+      })
+      .then((response) => {
+        this.datosTabla();
+        if (response.data.length <= 0) {
+          const arregloInicial = this.state.analisisVertical;
+          for (var i = 0; i < arregloInicial.length; i++) {
+            axios
+              .post("http://127.0.0.1:8000/api/analisisVertical/", {
+                valor: arregloInicial[i].saldo,
+                anio: this.state.form.periodo,
+                rubro: this.state.form.rubro,
+                valor_vertical: arregloInicial[i].vertical,
+                empresa_id: 1,
+                cuenta_id: arregloInicial[i].cuenta,
+              })
+              .then((response) => {
+                if (i > arregloInicial.length) {
+                  Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title:
+                      "Se guardo el analisis realizado, por ser la primera vez que lo realiza.",
+                    showConfirmButton: true,
+                  });
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            if (i + 1 === arregloInicial.length) {
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title:
+                  "Se guardo el analisis realizado por ser la primera vez que lo realiza.",
+                showConfirmButton: true,
+              });
+            }
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
+
+  datosTabla() {
+    var datos = [];
+    const obtener = document.getElementById("analisis").tBodies[0];
+    for (var j = 0; j < this.state.cantidadFilas; j++) {
+      datos[j] = {
+        cuenta: obtener.rows[j].cells[1].innerHTML,
+        saldo: obtener.rows[j].cells[3].innerHTML,
+        vertical: obtener.rows[j].cells[4].innerHTML,
+      };
+    }
+    this.setState({ analisisVertical: datos });
+  }
 
   render() {
     const { form } = this.state;
@@ -103,51 +189,89 @@ class AnalisisVertical extends Component {
                 <Col md="auto pt-2">
                   <Form.Group>
                     <Form.Label>Periodo</Form.Label>
-                    <Form.Select
-                      id="periodo"
-                      name="periodo"
-                      value={form.periodo}
-                      onChange={this.handleChange}
+                    <OverlayTrigger
+                      placement="right"
+                      overlay={<Tooltip>Seleccione un periodo</Tooltip>}
                     >
-                      <option value="">Seleccione...</option>
-                      {/* Cambiar periodo por el estado */}
-                      {periodos.map((elemento) => (
-                        <option key={elemento} value={elemento}>
-                          {elemento}
+                      <Form.Select
+                        id="periodo"
+                        name="periodo"
+                        value={form.periodo}
+                        onChange={this.handleChange}
+                      >
+                        <option value="" disabled={true}>
+                          Seleccione...
                         </option>
-                      ))}
-                    </Form.Select>
+                        {this.state.periodos.map((elemento) => (
+                          <option key={elemento.anio} value={elemento.anio}>
+                            {elemento.anio}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </OverlayTrigger>
                   </Form.Group>
                 </Col>
                 <Col md="auto pt-2">
                   <Form.Group>
                     <Form.Label>Rubro</Form.Label>
-                    <Form.Select
-                      id="rubro"
-                      name="rubro"
-                      value={form.rubro}
-                      onChange={this.handleChange}
+                    <OverlayTrigger
+                      placement="right"
+                      overlay={<Tooltip>Seleccione un rubro</Tooltip>}
                     >
-                      <option value="">Seleccione...</option>
-                      <option key="activo" value="activo">
-                        Activo
-                      </option>
-                      <option key="pasivo" value="pasivo">
-                        Pasivo
-                      </option>
-                      <option key="patrimonio" value="patrimonio">
-                        Patrimonio
-                      </option>
-                    </Form.Select>
+                      <Form.Select
+                        id="rubro"
+                        name="rubro"
+                        value={form.rubro}
+                        onChange={this.handleChange}
+                      >
+                        <option value="" disabled={true}>
+                          Seleccione...
+                        </option>
+                        {this.state.rubros.map((elemento) => (
+                          <option key={elemento.id} value={elemento.id}>
+                            {elemento.nombre}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </OverlayTrigger>
                   </Form.Group>
                 </Col>
               </>
             }
-            botonAnalisis={<Button variant="success" onClick={() => this.calculo()}>Realizar análisis</Button>}
-            botonImprimir={
+            botonAnalisis={
+              <OverlayTrigger
+                placement="top"
+                overlay={
+                  <Tooltip>
+                    Si no aparece ninguna opción de selección, no hay conexion a
+                    la base de datos
+                  </Tooltip>
+                }
+              >
+                <Button variant="secondary" onClick={() => this.peticionGet()}>
+                  Realizar análisis
+                </Button>
+              </OverlayTrigger>
+            }
+            botonPdf={
               <ReactToPrint
-                trigger={() => <Button variant="secondary">Imprimir</Button>}
+                trigger={() => (
+                  <Button variant="danger">
+                    <PictureAsPdfIcon />
+                  </Button>
+                )}
                 content={() => this.componentRef}
+                documentTitle={"Analisis Vertical " + form.periodo}
+              />
+            }
+            botonExcel={
+              <ReactHTMLTableToExcel
+                id="botonExcel"
+                className="btn btn-success"
+                table="analisis"
+                filename={"Analisis Vertical " + this.state.form.periodo}
+                sheet="Analisis_Vertical"
+                buttonText="EXCEL"
               />
             }
           />
@@ -155,9 +279,11 @@ class AnalisisVertical extends Component {
         <div id="tabla">
           <TablaAnalisis
             ref={(el) => (this.componentRef = el)}
-            tituloTabla={"Analisis Vertical  " + form.rubro}
+            tituloTabla={"Analisis Vertical  " + this.state.rubro}
             columnas={
               <>
+                <th>#</th>
+                <th className="no-ver">id</th>
                 <th>Cuenta</th>
                 <th>Periodo {form.periodo}</th>
                 <th>Analísis vetical</th>
@@ -165,16 +291,26 @@ class AnalisisVertical extends Component {
             }
             filas={
               <>
-                {this.state.cuentas.map((elemento) => (
+                {this.state.cuentas.length >= 1 ? (
+                  this.state.cuentas.map((elemento) => (
+                    <tr>
+                      <td>{this.state.cuentas.indexOf(elemento) + 1}</td>
+                      <td className="no-ver">{elemento.id}</td>
+                      <td>{elemento.nombre}</td>
+                      <td>{elemento.valor}</td>
+                      <td>
+                        {(
+                          (elemento.valor / this.state.totalRubro) *
+                          100
+                        ).toFixed(2) + " %"}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
                   <tr>
-                    <td>{elemento.nombre}</td>
-                    <td>{elemento.saldo}</td>
-                    <td>
-                      {((elemento.saldo / this.state.totalRubro) * 100).toFixed(2) +
-                        " %"}
-                    </td>
+                    <td colSpan="5">No hay registros</td>
                   </tr>
-                ))}
+                )}
               </>
             }
           />

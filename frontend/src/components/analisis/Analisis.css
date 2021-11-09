@@ -8,3 +8,7 @@
 .opciones-analisis:hover{
   transform: scale(1.05);
 }
+
+.no-ver{
+  display: none;
+}

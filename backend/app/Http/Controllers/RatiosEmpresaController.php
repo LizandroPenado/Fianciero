@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ratio;
+use App\Models\RatiosEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use SebastianBergmann\Environment\Console;
 
-class RatioController extends Controller
+class RatiosEmpresaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +16,8 @@ class RatioController extends Controller
      */
     public function index()
     {
-        $ratio = Ratio::all();
-        return $ratio;
+        $ratioEmpresa = RatiosEmpresa::all();
+        return $ratioEmpresa;
     }
 
     /**
@@ -83,5 +84,35 @@ class RatioController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function periodo(Request $request){
+
+        $empresa = $request->get('empresa');
+
+        $periodo = DB::table('ratio_empresas')->distinct()
+        ->select('ratio_empresas.anio_referencia')
+        ->join('empresas', 'empresas.id', '=', 'ratio_empresas.empresas_id')
+        ->where('empresas.id', '=', $empresa)
+        ->get();
+
+        return $periodo;
+    }
+
+    public function informe(Request $request){
+        
+        $empresa = $request->get("empresa");
+        $razonFinanciera = $request->get("razonFinanciera");
+        $periodo = $request->get("periodo");
+
+        $datos = DB::table('ratio_empresas')->distinct()
+        ->select('razon_financieras.nombre', 'ratios.nombre', 'valor_ratio_empresas')
+        ->join('empresas', 'empresas.id', '=', 'ratio_empresas.empresas_id')
+        ->join('ratios', 'ratios.id', '=', 'ratio_empresas.ratios_id')
+        ->join('razon_financieras', 'razon_financieras.id', '=', 'ratios.razonFinancieras_id')
+        ->where([['empresas.id','=', $empresa], ['razon_financieras.id', '=', $razonFinanciera], ['ratio_empresas.anio_referencia', '=', $periodo]])
+        ->get();
+
+        return $datos;
     }
 }

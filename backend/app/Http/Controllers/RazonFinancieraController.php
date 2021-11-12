@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RazonFinanciera;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class RatiosSector extends Controller
+class RazonFinancieraController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,7 +15,8 @@ class RatiosSector extends Controller
      */
     public function index()
     {
-        //
+        $razonFinanciera = RazonFinanciera::all();
+        return $razonFinanciera;
     }
 
     /**

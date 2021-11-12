@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RazonFinancieraController;
+use App\Models\RatiosSector;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class RazonFinancieraControllerController extends Controller
+class RatiosSectorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +15,8 @@ class RazonFinancieraControllerController extends Controller
      */
     public function index()
     {
-        //
+        $ratioSector = RatiosSector::all();
+        return $ratioSector;
     }
 
     /**
@@ -41,10 +43,10 @@ class RazonFinancieraControllerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\RazonFinancieraController  $razonFinancieraController
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(RazonFinancieraController $razonFinancieraController)
+    public function show($id)
     {
         //
     }
@@ -52,10 +54,10 @@ class RazonFinancieraControllerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\RazonFinancieraController  $razonFinancieraController
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(RazonFinancieraController $razonFinancieraController)
+    public function edit($id)
     {
         //
     }
@@ -64,10 +66,10 @@ class RazonFinancieraControllerController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\RazonFinancieraController  $razonFinancieraController
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, RazonFinancieraController $razonFinancieraController)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -75,10 +77,10 @@ class RazonFinancieraControllerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\RazonFinancieraController  $razonFinancieraController
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(RazonFinancieraController $razonFinancieraController)
+    public function destroy($id)
     {
         //
     }

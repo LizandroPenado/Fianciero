@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RatiosSector extends Model
+class RatiosEmpresa extends Model
 {
     use HasFactory;
-    protected $fillable = ['parametro_comparacion', 'actividad_economica_id', 'ratios_id'];
+    protected $fillable = ['anio_referencia', 'valor_ratio_empresas', 'ratios_id', 'empresas_id'];
 }

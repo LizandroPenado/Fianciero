@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RatiosEmpresaSector;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class RatiosEmpresaSector extends Controller
+class RatiosEmpresaSectorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,7 +15,8 @@ class RatiosEmpresaSector extends Controller
      */
     public function index()
     {
-        //
+        $ratioEmpresaSector = RatiosEmpresaSector::all();
+        return $ratioEmpresaSector;
     }
 
     /**

@@ -1,4 +1,5 @@
 import React from "react";
+import 'bootstrap/dist/css/bootstrap.css';
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
@@ -10,6 +11,7 @@ import AnalisisHorizontal from "./components/analisis/AnalisisHorizontal";
 import Typography from "@material-ui/core/Typography";
 // import Cuenta from "./components/cuenta/Cuenta";
 import Empresa from "./components/Empresa/Empresa"
+import Sector from "./components/Sector/Sector";
 
 export default function App() {
   return (
@@ -23,7 +25,7 @@ export default function App() {
           {/* <Route path="/cuenta" component={Cuenta} /> */}
           <Route path="/empresa" component={Empresa} />
           {/* <Route path="/informacion" component={Login} /> */}
-          {/* <Route path="/sector" component={Rol} /> */}
+          <Route path="/sector" component={Sector} /> 
           <Route path="/rol" component={Rol} />
           <Route path="/analisisVertical" component={AnalisisVertical} />
           <Route path="/analisisHorizontal" component={AnalisisHorizontal} />

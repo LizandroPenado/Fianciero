@@ -26,6 +26,10 @@ Route::get('/getCuentaID', 'App\Http\Controllers\CuentaController@getCuentaID');
 
 //Sectores
 Route::get('/sectores', 'App\Http\Controllers\SectoresController@index'); //Mostrar todos los sectores
+Route::post('/sectores', 'App\Http\Controllers\SectoresController@store'); //Crear registro
+Route::put('/sectores/{id}', 'App\Http\Controllers\SectoresController@update'); //Actualizar registro
+Route::delete('/sectores/{id}', 'App\Http\Controllers\SectoresController@destroy'); //Eliminar registro
+
 
 //ActividadEconomica
 Route::get('/actividades', 'App\Http\Controllers\ActividadEconomicaController@index'); //Mostrar todas las actividades
@@ -55,3 +59,10 @@ Route::get('/analisisHorizontal/existencia', 'App\Http\Controllers\AnalisisHoriz
 Route::get('/analisisVertical', 'App\Http\Controllers\AnalisisVerticalController@index');
 Route::post('/analisisVertical', 'App\Http\Controllers\AnalisisVerticalController@store');
 Route::get('/analisisVertical/existencia', 'App\Http\Controllers\AnalisisVerticalController@existencia');
+
+
+Route::get('/sectores', 'App\Http\Controllers\GestionSectorController@all')->name('sectores.all');
+Route::post('/sectores', 'App\Http\Controllers\GestionSectorController@store')->name('sectores.store');
+Route::get('/sectores/{sector}', 'App\Http\Controllers\GestionSectorController@show')->name('sectores.show');
+Route::put('/sectores/{sector}', 'App\Http\Controllers\GestionSectorController@update')->name('sectores.update');
+Route::delete('/sectores/{sector}', 'App\Http\Controllers\GestionSectorController@destory')->name('sectores.destroy');

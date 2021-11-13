@@ -40,13 +40,13 @@ class SectoresController extends Controller
         $sectores->nombre =  $request->nombre;
         $sectores->descripcion =  $request->descripcion;
 
-        $cuenta->save();
+        $sectores->save();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Sectores  $sectores
      * @return \Illuminate\Http\Response
      */
     public function show($id)

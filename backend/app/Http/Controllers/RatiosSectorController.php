@@ -84,4 +84,8 @@ class RatiosSectorController extends Controller
     {
         //
     }
+
+    public function comparacion(Request $request){
+        
+    }
 }

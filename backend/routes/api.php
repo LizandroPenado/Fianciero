@@ -64,3 +64,4 @@ Route::get('/ratiosEmpresa/periodo', 'App\Http\Controllers\RatiosEmpresaControll
 
 //Mostrar ratios segun razon financiera, tipo informe, y los periodos
 Route::get('/ratiosEmpresa/informe', 'App\Http\Controllers\RatiosEmpresaController@informe');
+Route::get('/ratiosEmpresa/promedio', 'App\Http\Controllers\RatiosEmpresaController@promedio');

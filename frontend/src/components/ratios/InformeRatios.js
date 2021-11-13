@@ -18,14 +18,22 @@ class InformeRatios extends Component {
         sectores: [],
         razonesFinancieras:[],
         tipoInforme: [],
-        valorInicio: 0,
-        valorFin: 0,
         sector: "",
         cantidadFilas: 0,
-        diagnosticos: [],
+        ratios: [],
+        ratiosSectorInicio: [],
+        ratiosSectorFin: [],
+        promedioSectorInicio: 0,
+        promedioSectorFin: 0,
+        comparacion: 0,
         diagnostico: "",
-        comparaciones: [],
-        comparacion: "",
+        informeRatio: {
+          nombreRatio: "",
+          valorInicial: 0,
+          valorFinal: 0,
+          comparacion: 0,
+          diagnostico: ""
+        },
         form: {
             razonFinanciera: "",
             tipoInforme: "",
@@ -72,6 +80,10 @@ class InformeRatios extends Component {
         }
       })
       .then((response) => {
+          this.setState({
+            periodoInicio: response.data,
+            cantidadFilas: response.data.length
+          });
           console.log(response.data);
       })
       .catch((error) => {
@@ -87,7 +99,45 @@ class InformeRatios extends Component {
         }
       })
       .then((response) => {
-          console.log(response.data);
+          this.setState({
+            periodoFin: response.data
+          })
+
+          this.asignacionRatios();
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+
+      //Ratios del sector para sacar promedio
+      axios
+      .get("http://127.0.0.1:8000/api/ratiosEmpresa/promedio/", {
+        params: {
+          periodo: this.state.form.periodoInicio,
+        }
+      })
+      .then((response) => {
+          this.setState({
+            ratiosSectorInicio: response.data
+          })
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+      axios
+      .get("http://127.0.0.1:8000/api/ratiosEmpresa/promedio/", {
+        params: {
+          periodo: this.state.form.periodoFin,
+        }
+      })
+      .then((response) => {
+          this.setState({
+            ratiosSectorFin: response.data
+          })
+
+          this.asignacionRatios();
       })
       .catch((error) => {
         console.log(error);
@@ -103,9 +153,112 @@ class InformeRatios extends Component {
           [e.target.name]: e.target.value,
         },
       });
-      console.log(this.state.form.razonFinanciera);
     };
+
+    //Metodo que realiza el calculo del analisis horizontal
+    asignacionRatios() {
+      let info = [];
+      let valor_final = 0;
+      let comparacion = 0;
+      let diagnostico = "";
+      let promedioInicio = 0;
+      let promedioFin = 0;
+
+      let resIni = 0;
+      let resFin = 0;
+
+      for (var i = 0; i < this.state.periodoInicio.length; i++) {
+        console.log(this.state.periodoFin[i]);
+
+        if(this.state.periodoInicio[i].nombre === this.state.periodoFin[i].nombre){
+          valor_final = this.state.periodoFin[i].valor_ratio_empresas;
+        }
+
+        if(this.state.form.tipoInforme === "comparacion"){
+          comparacion = this.state.periodoInicio[i].parametro_comparacion;
+        }
+        else if(this.state.form.tipoInforme === "promedio"){
+          
+
+          for(let j = 0; j < this.state.ratiosSectorInicio.length; j++){
+
+            if(this.state.periodoInicio[i].nombre === this.state.ratiosSectorInicio[j].nombre){
+              resIni += (this.state.ratiosSectorInicio[j].valor_ratio_empresas);
+            }
+
+            if(this.state.periodoFin[i].nombre === this.state.ratiosSectorFin[j].nombre){         
+              resFin += (this.state.ratiosSectorFin[j].valor_ratio_empresas);
+            }
+              
+          }
+
+
+
+          promedioInicio = (resIni/2).toFixed(2);
+          promedioFin = (resFin/2).toFixed(2);
+
+          resIni = 0;
+          resFin = 0;
+        }
+        
+
+        if(this.state.form.tipoInforme === "comparacion"){
+          if(this.state.periodoInicio[i].valor_ratio_empresas >= comparacion && valor_final >= comparacion){
+            diagnostico = "Aceptado";
+          }
+          else if((this.state.periodoInicio[i].valor_ratio_empresas >= comparacion && valor_final <= comparacion) || (this.state.periodoInicio[i].valor_ratio_empresas <= comparacion && valor_final >= comparacion)){
+            diagnostico = "Revisión";
+          }
+          else if(this.state.periodoInicio[i].valor_ratio_empresas <= comparacion && valor_final <= comparacion){
+            diagnostico = "Denegado";
+          }
+        }
+
+        if(this.state.form.tipoInforme === "promedio"){
+          if(this.state.periodoInicio[i].valor_ratio_empresas >= promedioInicio && valor_final >= promedioFin){
+            diagnostico = "Aceptado";
+          }
+          else if((this.state.periodoInicio[i].valor_ratio_empresas >= promedioInicio && valor_final <= promedioFin) || (this.state.periodoInicio[i].valor_ratio_empresas <= promedioInicio && valor_final >= promedioFin)){
+            diagnostico = "Revisión";
+          }
+          else if(this.state.periodoInicio[i].valor_ratio_empresas <= promedioInicio && valor_final <= promedioFin){
+            diagnostico = "Denegado";
+          }
+        }
+
+
+        info[i] = {
+          posicion: i,
+          id: this.state.periodoInicio[i].id,
+          nombre: this.state.periodoInicio[i].nombre,
+          valorInicio: this.state.periodoInicio[i].valor_ratio_empresas,
+          valorFinal: valor_final,
+          anioIni: this.state.periodoInicio[i].anio_referencia,
+          anioFin: this.state.periodoFin[i].anio_referencia,
+          comparacion: comparacion,
+          promInicial: promedioInicio,
+          promFin: promedioFin, 
+          diagnostico: diagnostico
+        };
+      }
+
+      this.setState({ ratios: info });
+    }
   
+    datosTabla() {
+      var datos = [];
+      const obtener = document.getElementById("analisis").tBodies[0];
+      for (var j = 0; j < this.state.cantidadFilas; j++) {
+        datos[j] = {
+          nombreRatio: obtener.rows[j].cells[1].innerHTML,
+          valorInicial: obtener.rows[j].cells[3].innerHTML,
+          valorFinal: obtener.rows[j].cells[4].innerHTML,
+          comparacion: obtener.rows[j].cells[5].innerHTML,
+          diagnostico: obtener.rows[j].cells[6].innerHTML,
+        };
+      }
+      this.setState({ informeRatio: datos });
+    }
 
     render() {
       const { form } = this.state;
@@ -246,9 +399,9 @@ class InformeRatios extends Component {
                     <PictureAsPdfIcon />
                   </Button>
                 )}
-                //content={() => this.componentRef}
+                content={() => this.componentRef}
                 documentTitle={
-                  "Informe Ratios "
+                  "Informe Ratios-" + this.state.form.periodoInicio + "-" + this.state.form.periodoFin
                 }
               />
             </>
@@ -259,34 +412,74 @@ class InformeRatios extends Component {
               className="btn btn-success"
               table="analisis"
               filename={
-                "Informe Ratios " 
+                "Informe Ratios " + this.state.form.periodoInicio + "-" + this.state.form.periodoFin
               }
-              sheet="Informe_Ratios"
+              sheet={"Informe_Ratios_"+ this.state.form.periodoInicio + "_" + this.state.form.periodoFin}
               buttonText="EXCEL"
             />
           }
         />
         <TablaAnalisis
-          //ref={(el) => (this.componentRef = el)}
-          tituloTabla={"Informe Ratios"}
+          ref={(el) => (this.componentRef = el)}
+          tituloTabla={"Informe Ratios " + this.state.form.periodoInicio + " - " + this.state.form.periodoFin}
           columnas={
             <>
               <th>#</th>
               <th className="no-ver">id</th>
-              <th>R. Financiera</th>
               <th>Nom. Ratio</th>
-              <th id="vInicial"></th>
-              <th id="vFinal"></th>
-              <th id="tipoInfo"></th>
+              <th>Ratio {form.periodoInicio}</th>
+              {
+                this.state.form.tipoInforme === "promedio" ? (
+                  <th>Comparacion {this.state.form.periodoInicio}</th>
+                  ): (
+                  <th disabled={true}></th>
+                  )
+              }
+              <th>Ratio {form.periodoFin}</th>
+              {
+                this.state.form.tipoInforme === "promedio" ? (
+                  <th>Comparacion {this.state.form.periodoFin}</th>
+                  ): (
+                  <th>Valor Comparacion</th>
+                  )
+              }
               <th>Diagnóstico</th>
             </>
           }
           filas={
             <>
-              
-                <tr>
-                  <td colSpan="5">No hay registros</td>
-                </tr>
+              {
+                this.state.ratios.length !== 0 ? (
+                  this.state.ratios.map(elemento => (
+                    <tr>
+                      <td>{elemento.posicion + 1}</td>
+                      <td className="no-ver">{elemento.id}</td>
+                      <td>{elemento.nombre}</td>
+                      <td>{elemento.valorInicio}</td>
+                      {
+                        this.state.form.tipoInforme === "promedio" ? (
+                          <td>{elemento.promInicial}</td>
+                        ): (
+                          <td disabled={true}></td>
+                        )
+                      }
+                      <td>{elemento.valorFinal}</td>
+                      {
+                        this.state.form.tipoInforme === "promedio" ? (
+                          <td>{elemento.promFin}</td>
+                        ): (
+                          <td>{elemento.comparacion}</td>
+                        )
+                      }
+                      <td>{elemento.diagnostico}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7">No hay registros</td>
+                  </tr>
+                )
+              }
             </>
           }
         />

@@ -50,6 +50,12 @@ export const SidebarData = [
     cName: 'nav-text'
   },
   {
+    title: 'Informe-Ratios',
+    path: '/informe-ratios',
+    icon: <DescriptionIcon />,
+    cName: 'nav-text'
+  },
+  {
     title: 'Graficar',
     path: '/graficar',
     icon: <AutoGraphIcon />,

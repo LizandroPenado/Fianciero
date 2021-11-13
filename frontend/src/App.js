@@ -7,6 +7,7 @@ import Login from "./components/login/Login";
 import Rol from "./components/rol/Rol";
 import AnalisisVertical from "./components/analisis/AnalisisVertical";
 import AnalisisHorizontal from "./components/analisis/AnalisisHorizontal";
+import {InformeRatios} from "./components/ratios/InformeRatios";
 import Typography from "@material-ui/core/Typography";
 // import Cuenta from "./components/cuenta/Cuenta";
 import Empresa from "./components/Empresa/Empresa"
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="/rol" component={Rol} />
           <Route path="/analisisVertical" component={AnalisisVertical} />
           <Route path="/analisisHorizontal" component={AnalisisHorizontal} />
+          <Route path="/informe-ratios" component={InformeRatios} />
           {/* <Route path="/graficar" component={cuenta} /> */}
         </Switch>
       </Router>
@@ -41,4 +43,3 @@ export default function App() {
     </main>
   );
 }
-

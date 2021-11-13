@@ -11,16 +11,6 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 const Input = styled('input')({
     display: 'none',
 });
-const pasos = [
-    {
-        label: "Inserte la información de su empresa",
-        descripcion: "Descripcion del paso",
-    },
-    {
-        label: "Suba su archivo de catálogo de cuentas",
-        descripcion: "",
-    },
-];
 class Empresa extends Component{
     constructor(props){
         super(props)
@@ -38,6 +28,7 @@ class Empresa extends Component{
             ultima_empresa_id:"",
             unltima_empresa_nombre:"",
         }
+        this.handleChange = this.handleChange.bind(this)
     }
     obtenerUltimaEmpresa(){
         axios  
@@ -110,7 +101,7 @@ class Empresa extends Component{
                     nombre_cuenta: arreglo_inicial[i].nombre_cuenta,
                     codigo_cuenta: arreglo_inicial[i].codigo_cuenta,
                     empresa_id: this.state.ultima_empresa_id,
-                    nombre_empresa: arreglo_inicial[i] .nombre_empresa
+                    nombre_empresa: arreglo_inicial[i].nombre_empresa
                 }
             }
             
@@ -120,7 +111,7 @@ class Empresa extends Component{
     }
     componentDidMount() {
         axios
-          .get("http://127.0.0.1:8000/api/sectores/")
+          .get("http://127.0.0.1:8000/api/sectoresConActividad/")
           .then((response) => {
             this.setState({ sectores: response.data });
           })
@@ -141,9 +132,18 @@ class Empresa extends Component{
                 [e.target.name]:e.target.value,
             }
         })
+    }
+    handleSector = async (e) => {
+        e.persist();
+        await  this.setState({
+            empresa: {
+                ...this.state.empresa,
+                [e.target.name]:e.target.value,
+            }
+        })
         axios
         .get("http://127.0.0.1:8000/api/actividadesPorSector/",{
-            params:{id:e.target.value},
+            params:{id:this.state.empresa.sector_id},
         })
         .then((response)=>{
           this.setState({actividades: response.data});
@@ -323,14 +323,14 @@ class Empresa extends Component{
                             >
                             </Form.Control>
                         </Form.Group>
-                        <Form.Group>
+                        {/* <Form.Group>
                             <InputLabel id="sector_label">Sector</InputLabel>
                             <Select
                                 labelId="sector_label"
                                 id="sector_id"
                                 name="sector_id"
                                 value={this.state.empresa.sector_id}
-                                onChange={this.handleChange}
+                                onChange={this.handleSector}
                                 label="Sector"
                                 >
                                 <MenuItem value="" disabled={true}>
@@ -345,27 +345,30 @@ class Empresa extends Component{
                                     </MenuItem>
                                 ))}
                             </Select>
-                        </Form.Group>
+                        </Form.Group> */}
                         <Form.Group>
-                        <InputLabel id="actividad_label">Actividad</InputLabel>
-                            <Select
+                        <InputLabel id="actividad_label">Sector y Actividad</InputLabel>
+                            <Select native defaultValue="" 
                                 labelId="actividad_label"
                                 id="actividad_id"
                                 name="actividad_id"
-                                value={this.state.empresa.actividad_id}
                                 onChange={this.handleChange}
                                 label="Actividad"
                             >
-                                <MenuItem value="" disabled={true}>
+                               <option value="" disabled={true}>
                                      Seleccione..
-                                </MenuItem> 
-                                {this.state.actividades.map((elemento2) =>(
-                                    <MenuItem
-                                    key={elemento2.id}
-                                    value={elemento2.id}
+                                </option> 
+                                {this.state.sectores.map((elemento) =>(
+                                    <optgroup
+                                    key={elemento.id}
+                                    value={elemento.id}
+                                    label={elemento.nombre}
                                     >
-                                    {elemento2.nombre}
-                                    </MenuItem>
+                                        {elemento.actividades.map((item)=>(
+                                            <option value={item.id} key={item.id}>{item.nombre}</option>
+                                        ))}
+                                        
+                                    </optgroup>
                                 ))}
                             </Select>
                         </Form.Group>
@@ -376,7 +379,7 @@ class Empresa extends Component{
                         </Form.Group>
                         </Form>
                         {/* Formularo para el catalgo de cuentas*/}
-                        {this.state.ultima_empresa_id != "" ?  
+                        {this.state.ultima_empresa_id !== "" ?  
                             <Form>
                                 <Form.Group>
                                 <Form.Label>
@@ -405,7 +408,7 @@ class Empresa extends Component{
                                 <Form.Label>
                                     Datos desde Excel:
                                 </Form.Label>
-                                {this.state.catalogo != 0 ? 
+                                {this.state.catalogo !== 0 ? 
                                 <DataTable id="datatable_catalogo" titulo="Catalogo de cuentas"noRegistro="No se ha cargado ningun registro..."columnas={columns}datos={this.state.catalogo}/> 
                                 : "" 
                                 }
@@ -443,7 +446,7 @@ class Empresa extends Component{
                                 <Form.Label>
                                     Datos desde Excel:
                                 </Form.Label>
-                                { this.state.balance != 0 ? 
+                                { this.state.balance !== 0 ? 
                                 <DataTable id="datatable_balance" titulo="Balance"noRegistro="No se ha cargado ningun registro..."columnas={columnsBalance}datos={this.state.balance}/> 
                                 : "" 
                                 }

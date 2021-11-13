@@ -64,7 +64,17 @@ class SectoresController extends Controller
     {
         //
     }
-
+    /**
+     * Display a listing of the resource.
+     ** @param  \Illuminate\Http\Request  $request
+     *  
+     * @return \Illuminate\Http\Response
+     */
+    public function sectoresConActividad()
+    {
+        $sectores = Sectores::with('actividades')->get();
+        return $sectores;
+    }
     /**
      * Update the specified resource in storage.
      *

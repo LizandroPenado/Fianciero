@@ -326,9 +326,9 @@ class Empresa extends Component {
     ];
     return (
       <>
-        <Box sx={{ flexGrow: 1, overflow: "hidden" }}>
+        <Box sx={{ flexGrow: 1, overflow: "hidden" }} >
             <Form>
-          <Paper sx={{ maxWidth: 720, my: 1, mx: "auto", p: 2 }}>
+          <Paper sx={{ maxWidth: 720, my: 1, mx: "auto", p: 2 }}  className="cuadro-empresa">
             <Grid>
               
                 <Form.Group>
@@ -405,7 +405,7 @@ class Empresa extends Component {
           {/* Formularo para el catalgo de cuentas */}
           {this.state.ultima_empresa_id !== "" ?  
           <Form>
-            <Paper sx={{ maxWidth: 720, my: 2, mx: "auto", p: 2 }}>
+            <Paper sx={{ maxWidth: 720, my: 2, mx: "auto", p: 2 }} className="cuadro-empresa">
               <Grid container spacing={0}>
                 <Form.Group>
                   <Form.Label>Suba su catálogo de cuentas:</Form.Label>
@@ -448,7 +448,7 @@ class Empresa extends Component {
                 </Form.Group>
               </Grid>
             </Paper>
-            <Paper sx={{ maxWidth: 720, my: 1, mx: "auto", p: 2 }}>
+            <Paper sx={{ maxWidth: 720, my: 1, mx: "auto", p: 2 }} className="cuadro-empresa">
               <Grid  spacing={0}>
                 <Form.Group>
                   <Form.Label>Suba su balance:</Form.Label>

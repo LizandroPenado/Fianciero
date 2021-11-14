@@ -10,6 +10,7 @@ import {InformeRatios} from "./components/ratios/InformeRatios";
 import Typography from "@material-ui/core/Typography";
 import Empresa from "./components/Empresa/Empresa"
 import Graficar from "./components/Graficos/Graficar";
+import Sector from "./components/sector/Sector";
 
 export default function App() {
   return (
@@ -24,7 +25,8 @@ export default function App() {
           <Route path="/analisisVertical" component={AnalisisVertical} />
           <Route path="/analisisHorizontal" component={AnalisisHorizontal} />
           <Route path="/informeRatios" component={InformeRatios} />
-          {<Route path="/graficar" component={Graficar} />}
+          <Route path="/graficar" component={Graficar} />
+          <Route path="/sector" component={Sector} />
         </Switch>
       </Router>
       <footer className="fixed-bottom">

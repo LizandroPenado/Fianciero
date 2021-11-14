@@ -27,6 +27,9 @@ Route::get('/getCuentaID', 'App\Http\Controllers\CuentaController@getCuentaID');
 //Sectores
 Route::get('/sectores', 'App\Http\Controllers\SectoresController@index'); //Mostrar todos los sectores
 Route::get('/sectoresConActividad', 'App\Http\Controllers\SectoresController@sectoresConActividad'); //Mostrar todos los sectores con sus actividades
+Route::put('/sectores/{id}', 'App\Http\Controllers\SectoresController@update'); //Actualizar 
+Route::delete('/sectores/{id}', 'App\Http\Controllers\SectoresController@destroy'); //Eliminar 
+Route::post('/sectores', 'App\Http\Controllers\SectoresController@store'); //Mostrar todos los sectores
 
 //ActividadEconomica
 Route::get('/actividades', 'App\Http\Controllers\ActividadEconomicaController@index'); //Mostrar todas las actividades

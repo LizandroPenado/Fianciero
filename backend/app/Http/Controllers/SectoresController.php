@@ -36,11 +36,11 @@ class SectoresController extends Controller
      */
     public function store(Request $request)
     {
-        $sectores = new Sectores();
-        $sectores->nombre =  $request->nombre;
-        $sectores->descripcion =  $request->descripcion;
+        $sector = new Sectores();
+        $sector->nombre =  $request->nombre;
+        $sector->descripcion =  $request->descripcion;
 
-        $cuenta->save();
+        $sector->save();
     }
 
     /**
@@ -86,7 +86,7 @@ class SectoresController extends Controller
     {
         $sectores = Sectores::findOrFail($request->id);
         $sectores->nombre =  $request->nombre;
-        $sectores->descripcion =  $request->tipo;
+        $sectores->descripcion =  $request->descripcion;
 
         $sectores->save();
         return $sectores;
@@ -98,7 +98,7 @@ class SectoresController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($request)
+    public function destroy(Request $request)
     {
         $sectores = Sectores::destroy($request->id);
         return $sectores;

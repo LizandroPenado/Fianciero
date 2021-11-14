@@ -19,6 +19,7 @@ class AnalisisVertical extends Component {
       totalRubro: 0.0,
       rubro: "",
       cantidadFilas: 0,
+      empresas: [],
       analisisVertical: [
         {
           cuenta: "",
@@ -29,30 +30,27 @@ class AnalisisVertical extends Component {
       form: {
         periodo: "",
         rubro: "",
+        empresa: "",
       },
     };
   }
 
   componentDidMount() {
-    //informacion de los periodos
-    axios
-      .get("http://127.0.0.1:8000/api/balances/periodo/", {
-        params: {
-          empresa: 1 /* Cambiar cuando haya logeo */,
-        },
-      })
-      .then((response) => {
-        this.setState({ periodos: response.data });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
     //Informacion de los rubros
     axios
       .get("http://127.0.0.1:8000/api/rubros/")
       .then((response) => {
         this.setState({ rubros: response.data });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    //Informacio de las empresas
+    axios
+      .get("http://127.0.0.1:8000/api/empresas/")
+      .then((response) => {
+        this.setState({ empresas: response.data });
       })
       .catch((error) => {
         console.log(error);
@@ -70,12 +68,35 @@ class AnalisisVertical extends Component {
     });
   };
 
+  handlePeriodo = async (e) => {
+    e.persist();
+    await this.setState({
+      form: {
+        ...this.state.form,
+        [e.target.name]: e.target.value,
+      },
+    });
+    //informacion de los periodos
+    axios
+      .get("http://127.0.0.1:8000/api/balances/periodo/", {
+        params: {
+          empresa: this.state.form.empresa,
+        },
+      })
+      .then((response) => {
+        this.setState({ periodos: response.data });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   //Obtiene los datos de la BD
   peticionGet = async () => {
     axios
       .get("http://127.0.0.1:8000/api/balances/analisis/", {
         params: {
-          empresa: 1 /* Cambiar cuando haya logeo */,
+          empresa: this.state.form.empresa,
           periodo: this.state.form.periodo,
           rubro: this.state.form.rubro,
         },
@@ -115,7 +136,7 @@ class AnalisisVertical extends Component {
     axios
       .get("http://127.0.0.1:8000/api/analisisVertical/existencia/", {
         params: {
-          empresa: 1,
+          empresa: this.state.form.empresa,
           periodo: this.state.form.periodo,
           rubro: this.state.form.rubro,
         },
@@ -131,20 +152,10 @@ class AnalisisVertical extends Component {
                 anio: this.state.form.periodo,
                 rubro: this.state.form.rubro,
                 valor_vertical: arregloInicial[i].vertical,
-                empresa_id: 1,
+                empresa_id: this.state.form.empresa,
                 cuenta_id: arregloInicial[i].cuenta,
               })
-              .then((response) => {
-                if (i > arregloInicial.length) {
-                  Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title:
-                      "Se guardo el analisis realizado, por ser la primera vez que lo realiza.",
-                    showConfirmButton: true,
-                  });
-                }
-              })
+              .then((response) => {})
               .catch((error) => {
                 console.log(error);
               });
@@ -184,8 +195,36 @@ class AnalisisVertical extends Component {
       <>
         <div>
           <Opciones
+            estilos={"opciones-vetical"}
             opciones={
               <>
+                <Col md="auto pt-2">
+                  <Form.Group>
+                    <Form.Label>Empresa</Form.Label>
+                    <OverlayTrigger
+                      placement="right"
+                      overlay={
+                        <Tooltip>Seleccione la empresa que desee</Tooltip>
+                      }
+                    >
+                      <Form.Select
+                        id="empresa"
+                        name="empresa"
+                        value={form.empresa}
+                        onChange={this.handlePeriodo}
+                      >
+                        <option value="" disabled={true}>
+                          Seleccione...
+                        </option>
+                        {this.state.empresas.map((elemento) => (
+                          <option key={elemento.id} value={elemento.id}>
+                            {elemento.nombre}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </OverlayTrigger>
+                  </Form.Group>
+                </Col>
                 <Col md="auto pt-2">
                   <Form.Group>
                     <Form.Label>Periodo</Form.Label>
@@ -279,7 +318,7 @@ class AnalisisVertical extends Component {
         <div id="tabla">
           <TablaAnalisis
             ref={(el) => (this.componentRef = el)}
-            tituloTabla={"Analisis Vertical  " + this.state.rubro}
+            tituloTabla={"Analisis Vertical - " + this.state.rubro}
             columnas={
               <>
                 <th>#</th>

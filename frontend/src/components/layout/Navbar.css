@@ -70,3 +70,13 @@
   .span {
     margin-left: 16px;
   }
+
+  .division {
+    color:antiquewhite;
+    font-size: 18px;
+    width: 95%;
+    align-items: center;
+    display: flex;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+  }

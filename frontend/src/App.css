@@ -16,3 +16,7 @@
   }
 }
 
+/*Clase Propia*/
+.graficoOculto{
+  display: none !important;
+}

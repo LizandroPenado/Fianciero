@@ -10,6 +10,7 @@ import AnalisisHorizontal from "./components/analisis/AnalisisHorizontal";
 import Typography from "@material-ui/core/Typography";
 // import Cuenta from "./components/cuenta/Cuenta";
 import Empresa from "./components/Empresa/Empresa"
+import Graficar from "./components/Graficos/Graficar";
 
 export default function App() {
   return (
@@ -27,7 +28,7 @@ export default function App() {
           <Route path="/rol" component={Rol} />
           <Route path="/analisisVertical" component={AnalisisVertical} />
           <Route path="/analisisHorizontal" component={AnalisisHorizontal} />
-          {/* <Route path="/graficar" component={cuenta} /> */}
+          {<Route path="/graficar" component={Graficar} />}
         </Switch>
       </Router>
       <footer className="fixed-bottom">

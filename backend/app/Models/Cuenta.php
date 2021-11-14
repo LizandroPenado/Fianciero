@@ -17,3 +17,5 @@ class Cuenta extends Model
     }
     
 }
+
+

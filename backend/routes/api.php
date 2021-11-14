@@ -55,3 +55,8 @@ Route::get('/analisisHorizontal/existencia', 'App\Http\Controllers\AnalisisHoriz
 Route::get('/analisisVertical', 'App\Http\Controllers\AnalisisVerticalController@index');
 Route::post('/analisisVertical', 'App\Http\Controllers\AnalisisVerticalController@store');
 Route::get('/analisisVertical/existencia', 'App\Http\Controllers\AnalisisVerticalController@existencia');
+
+//Graficar.
+Route::get('/graficar','App\Http\Controllers\GraficarController@index');
+Route::post('/graficar','App\Http\Controllers\GraficarController@datosG');
+Route::get('/cuentaEmpresa/{idEmpresa}','App\Http\Controllers\CuentaController@cuentasR');

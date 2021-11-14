@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Container, Table } from "react-bootstrap";
-import { Label } from "reactstrap";
 
 export default class TablaAnalisis extends Component {
   constructor(props) {
@@ -11,7 +10,7 @@ export default class TablaAnalisis extends Component {
     return (
       <Container className="pt-4">
         <div className="text-center">
-          <Label>{this.props.tituloTabla}</Label>
+          <h3>{this.props.tituloTabla}</h3>
         </div>
         <div>
           <Table responsive="sm" className="text-center" hover={false} id="analisis">

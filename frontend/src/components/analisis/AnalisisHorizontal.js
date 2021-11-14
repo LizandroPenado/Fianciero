@@ -22,6 +22,7 @@ class AnalisisHorizontal extends Component {
       saldoFin: 0,
       rubro: "",
       cantidadFilas: 0,
+      empresas: [],
       analisisHorizontal: [
         {
           cuenta: "",
@@ -35,30 +36,27 @@ class AnalisisHorizontal extends Component {
         periodoInicio: "",
         periodoFin: "",
         rubro: "",
+        empresa: "",
       },
     };
   }
 
   componentDidMount() {
-    //informacion de los periodos
-    axios
-      .get("http://127.0.0.1:8000/api/balances/periodo/", {
-        params: {
-          empresa: 1 /* Cambiar cuando haya logeo */,
-        },
-      })
-      .then((response) => {
-        this.setState({ periodos: response.data });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
     //Informacion de los rubros
     axios
       .get("http://127.0.0.1:8000/api/rubros/")
       .then((response) => {
         this.setState({ rubros: response.data });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    //Informacio de las empresas
+    axios
+      .get("http://127.0.0.1:8000/api/empresas/")
+      .then((response) => {
+        this.setState({ empresas: response.data });
       })
       .catch((error) => {
         console.log(error);
@@ -76,12 +74,35 @@ class AnalisisHorizontal extends Component {
     });
   };
 
+  handlePeriodo = async (e) => {
+    e.persist();
+    await this.setState({
+      form: {
+        ...this.state.form,
+        [e.target.name]: e.target.value,
+      },
+    });
+    //informacion de los periodos
+    axios
+      .get("http://127.0.0.1:8000/api/balances/periodo/", {
+        params: {
+          empresa: this.state.form.empresa,
+        },
+      })
+      .then((response) => {
+        this.setState({ periodos: response.data });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   peticionGet = async () => {
     //Obtener periodo de incio
     axios
       .get("http://127.0.0.1:8000/api/balances/analisis/", {
         params: {
-          empresa: 1 /* Cambiar cuando haya logeo */,
+          empresa: this.state.form.empresa,
           periodo: this.state.form.periodoInicio,
           rubro: this.state.form.rubro,
         },
@@ -102,7 +123,7 @@ class AnalisisHorizontal extends Component {
     axios
       .get("http://127.0.0.1:8000/api/balances/analisis/", {
         params: {
-          empresa: 1 /* Cambiar cuando haya logeo */,
+          empresa: this.state.form.empresa,
           periodo: this.state.form.periodoFin,
           rubro: this.state.form.rubro,
         },
@@ -146,7 +167,7 @@ class AnalisisHorizontal extends Component {
     axios
       .get("http://127.0.0.1:8000/api/analisisHorizontal/existencia/", {
         params: {
-          empresa: 1,
+          empresa: this.state.form.empresa,
           periodoAnterior: this.state.form.periodoInicio,
           periodoActual: this.state.form.periodoFin,
           rubro: this.state.form.rubro,
@@ -166,7 +187,7 @@ class AnalisisHorizontal extends Component {
                 rubro: this.state.form.rubro,
                 valor_absoluto: arregloInicial[i].absoluto,
                 valor_relativo: arregloInicial[i].relativo,
-                empresa_id: 1,
+                empresa_id: this.state.form.empresa,
                 cuenta_id: arregloInicial[i].cuenta,
               })
               .then((response) => {})
@@ -210,8 +231,34 @@ class AnalisisHorizontal extends Component {
     return (
       <div>
         <Opciones
+          estilos={"opciones-horizontal"}
           opciones={
             <>
+              <Col md="auto pt-2">
+                <Form.Group>
+                  <Form.Label>Empresa</Form.Label>
+                  <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip>Seleccione la empresa que desee</Tooltip>}
+                  >
+                    <Form.Select
+                      id="empresa"
+                      name="empresa"
+                      value={form.empresa}
+                      onChange={this.handlePeriodo}
+                    >
+                      <option value="" disabled={true}>
+                        Seleccione...
+                      </option>
+                      {this.state.empresas.map((elemento) => (
+                        <option key={elemento.id} value={elemento.id}>
+                          {elemento.nombre}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </OverlayTrigger>
+                </Form.Group>
+              </Col>
               <Col md="auto pt-2">
                 <Form.Group>
                   <Form.Label>Periodo de inicio</Form.Label>
@@ -343,7 +390,7 @@ class AnalisisHorizontal extends Component {
         />
         <TablaAnalisis
           ref={(el) => (this.componentRef = el)}
-          tituloTabla={"Analisis Horizontal  " + this.state.rubro}
+          tituloTabla={"Analisis Horizontal - " + this.state.rubro}
           columnas={
             <>
               <th>#</th>

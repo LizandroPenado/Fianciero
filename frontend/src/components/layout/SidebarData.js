@@ -1,14 +1,14 @@
 import React from 'react';
 import HomeIcon from '@mui/icons-material/Home';
-import PersonIcon from '@mui/icons-material/Person';
 import DescriptionIcon from '@mui/icons-material/Description';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
-import InfoIcon from '@mui/icons-material/Info';
+import LoginIcon from '@mui/icons-material/Login';
+import BusinessIcon from '@mui/icons-material/Business';
 
 export const SidebarData = [
   {
-    title: 'Home',
+    title: 'Inicio',
     path: '/',
     icon: <HomeIcon />,
     cName: 'nav-text'
@@ -16,13 +16,13 @@ export const SidebarData = [
   {
     title: 'Login',
     path: '/login',
-    icon: <PersonIcon />,
+    icon: <LoginIcon />,
     cName: 'nav-text'
   },
   {
-    title: 'Registrar información',
-    path: '/información',
-    icon: <InfoIcon />,
+    title: 'Empresa',
+    path: '/empresa',
+    icon: <BusinessIcon />,
     cName: 'nav-text'
   },
   {
@@ -32,9 +32,9 @@ export const SidebarData = [
     cName: 'nav-text'
   },
   {
-    title: 'Gestión roles',
-    path: '/rol',
-    icon: <AssignmentIcon/>,
+    title: 'Analisis horizontal',
+    path: '/analisisHorizontal',
+    icon: <DescriptionIcon />,
     cName: 'nav-text'
   },
   {
@@ -44,14 +44,8 @@ export const SidebarData = [
     cName: 'nav-text'
   },
   {
-    title: 'Analisis horizontal',
-    path: '/analisisHorizontal',
-    icon: <DescriptionIcon />,
-    cName: 'nav-text'
-  },
-  {
-    title: 'Informe-Ratios',
-    path: '/informe-ratios',
+    title: 'Informe ratios',
+    path: '/informeRatios',
     icon: <DescriptionIcon />,
     cName: 'nav-text'
   },
@@ -59,12 +53,6 @@ export const SidebarData = [
     title: 'Graficar',
     path: '/graficar',
     icon: <AutoGraphIcon />,
-    cName: 'nav-text'
-  },
-  {
-    title: 'Empresa',
-    path: '/empresa',
-    icon: <PersonIcon />,
     cName: 'nav-text'
   },
 ];

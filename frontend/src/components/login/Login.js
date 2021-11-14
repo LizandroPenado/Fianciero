@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Card, Container, Form, Button, FloatingLabel } from "react-bootstrap";
 import "./Login.css";
 import LoginIcon from "@mui/icons-material/Login";
-import axios from "axios";
 
 class Login extends Component {
   render() {
@@ -16,14 +15,14 @@ class Login extends Component {
                 <Form.Group>
                   <FloatingLabel
                     controlId="floatingInput"
-                    label="Correo electrónico"
+                    label="Usuario"
                     className="mb-4"
                   >
                     <Form.Control
-                      type="email"
-                      id="email"
-                      name="email"
-                      placeholder="correo@gmail.com"
+                      type="text"
+                      id="usuario"
+                      name="usuario"
+                      placeholder="Usuario"
                     />
                   </FloatingLabel>
                 </Form.Group>

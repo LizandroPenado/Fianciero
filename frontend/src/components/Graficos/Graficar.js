@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { Col, Form, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Line } from 'react-chartjs-2';
-import axios from "axios";
 import Swal from "sweetalert2";
-import App from "../../App.css";
+import "../../App.css";
 
 class Graficar extends Component{
     constructor(props)
@@ -17,15 +16,17 @@ class Graficar extends Component{
             codigo:'',
             peridoI:[],
             cuentasP:[],
+            empresaNombre:[],
             form: {
               periodoInicio: "",
               periodoFin: "",
               cuenta: "",
+              empresaNombre:"",
             },
         }
     }
     componentDidMount(){
-      fetch(`http://127.0.0.1:8000/api/cuentaEmpresa/${3}`,
+      /*fetch(`http://127.0.0.1:8000/api/cuentaEmpresa/${}`,
       {
         method:"GET",
       })
@@ -35,9 +36,11 @@ class Graficar extends Component{
           cuentasP:data
         })
         console.log(data)
-      })
+      })*/
 
-      fetch(`http://127.0.0.1:8000/api/balances/periodo?empresa=3`
+      
+
+      fetch(`http://127.0.0.1:8000/api/EmpresasG/`
       ,{
         method: "GET",
         //body: JSON.stringify({empresa:3}),
@@ -50,22 +53,24 @@ class Graficar extends Component{
       .then(data => {
         console.log(data)
         this.setState({
-          peridoI: data
+          empresaNombre: data
         })
-        console.log(this.state.peridoI)
+        console.log(this.state.empresaNombre)
       })
     }
+
+    
 
     //Metodo para almacenar datos de usuario
     graficar = () => {
       console.log(this.state.form.periodoInicio)
       const grafi = {
         'idCuenta':this.state.form.cuenta,
-        'idEmpresa':3,
+        'idEmpresa':this.state.form.empresaNombre,
         'anioIni':this.state.form.periodoInicio,
         'anioFin':this.state.form.periodoFin
     }
-      if(this.state.form.cuenta === "" || this.state.form.periodoInicio === "" || this.state.form.periodoFin === "")
+      if(this.state.form.cuenta === "" || this.state.form.periodoInicio === "" || this.state.form.periodoFin === "" || this.state.form.empresaNombre === "")
       {
         Swal.fire({
           position: "center",
@@ -109,6 +114,40 @@ class Graficar extends Component{
           [e.target.name]: e.target.value,
         },
       });
+      
+      if(this.state.form.empresaNombre !== "")
+      {
+        console.log(this.state.form.empresaNombre)
+        fetch(`http://127.0.0.1:8000/api/cuentaEmpresa/${this.state.form.empresaNombre}`,
+        {
+          method:"GET",
+        })
+        .then(response => response.json())
+        .then(data => {
+          this.setState({
+            cuentasP:data
+          })
+          console.log(data)
+        })
+        
+        fetch(`http://127.0.0.1:8000/api/balances/periodo?empresa=${this.state.form.empresaNombre}`
+      ,{
+        method: "GET",
+        //body: JSON.stringify({empresa:3}),
+        /*headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+      }*/
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        this.setState({
+          peridoI: data
+        })
+        console.log(this.state.peridoI)
+      })
+      }
     };
 
     render(){
@@ -123,6 +162,27 @@ class Graficar extends Component{
         }
         return(
         <div>
+
+<Col md="auto pt-2">
+              <Form.Group>
+                <Form.Label>Seleccione Empresa: </Form.Label>
+                  <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip>Seleccione una Empresa</Tooltip>}
+                  > 
+                    <Form.Select onChange={this.handleChange} name="empresaNombre">
+                      <option>Seleccione una Empresa</option>
+                        {
+                          this.state.empresaNombre.map(p =>{
+                            return <option key={p.id} value = {p.id}>{p.nombre}</option>
+                          })
+                        }
+                    </Form.Select>
+                  </OverlayTrigger>
+              </Form.Group>
+            </Col>
+
+
 
             <Col md="auto pt-2">
             <Form.Group>
@@ -165,7 +225,7 @@ class Graficar extends Component{
                   </OverlayTrigger>
               </Form.Group>
             </Col>
-
+            
             <Col md="auto pt-2">
               <Form.Group>
                 <Form.Label>Seleccione Cuenta: </Form.Label>
@@ -185,7 +245,7 @@ class Graficar extends Component{
               </Form.Group>
             </Col>
 
-            <Button onClick= {()=>this.graficar()}>Enviar</Button>
+            <Button onClick= {()=>this.graficar()}>Graficar</Button>
             
               
             <Line className = {graficoOculto? "": "graficoOculto"}

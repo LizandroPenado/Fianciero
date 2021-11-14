@@ -1,0 +1,56 @@
+.home-container{
+    height: 80vh;
+    background-color: #c2c2c2;
+    border-radius: 10px;
+}
+
+.home-title{
+    height: 40%;
+    text-align: center;
+    padding-top: 45px;
+}
+
+.home-title h1{
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.home-info{
+    height: 60%;
+    background-color: rgb(237, 237, 237);
+    padding: 20px;
+    text-align: center;
+    border-radius: 15px;
+}
+
+.home-info h3{
+    font-size: 25px;
+    margin-bottom: 50px;
+    color: #4d4d4d;
+    font-weight: 600;
+}
+
+.home-info p{
+    font-size: 17px;
+    font-weight: 500;
+    color: #7b7b7b;
+}
+
+@media screen and (min-width: 1024px){
+    .home-container{
+        display: grid;
+        grid-template-columns: repeat(2, 50%);
+        align-items: center;
+        margin: auto 20px;
+    }
+
+    .home-title h1{
+        font-size: 60px;
+        font-weight: 600;
+    }
+
+    .home-info{
+        padding-top: 50px;
+        margin-right: 35px;
+    }
+}

@@ -1,5 +1,5 @@
 .opciones-horizontal {
-  background-color: #bcb48c;
+  background-color: #c2ba9a;
   border-radius: 30px 30px 30px 30px;
   border: 1px solid #060b26;
   color: #060b26;
@@ -19,9 +19,7 @@
   color:white;
 }
 
-.opciones-analisis:hover {
-  transform: scale(1.05);
-}
+
 
 .no-ver {
   display: none;

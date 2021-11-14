@@ -78,7 +78,37 @@ class Empresa extends Component {
               ? 1
               : arreglo_inicial[i].TipoDeCuenta === "Activo Fijo"
               ? 2
-              : 3,
+              : arreglo_inicial[i].TipoDeCuenta === "Activo Total"
+              ? 3
+              : arreglo_inicial[i].TipoDeCuenta === "Costo de Ventas"
+              ? 4
+              : arreglo_inicial[i].TipoDeCuenta === "Cuentas por Cobrar"
+              ? 5
+              : arreglo_inicial[i].TipoDeCuenta === "Cuentas por Pagar"
+              ? 6
+              : arreglo_inicial[i].TipoDeCuenta === "Efectivo"
+              ? 7
+              : arreglo_inicial[i].TipoDeCuenta === "Gastos Financieros"
+              ? 8
+              : arreglo_inicial[i].TipoDeCuenta === "Ingresos"
+              ? 9
+              : arreglo_inicial[i].TipoDeCuenta === "Inventario"
+              ? 10
+              : arreglo_inicial[i].TipoDeCuenta === "Otro Tipo de Cuenta"
+              ? 11
+              : arreglo_inicial[i].TipoDeCuenta === "Pasivo Circulante"
+              ? 12
+              : arreglo_inicial[i].TipoDeCuenta === "Pasivo Total"
+              ? 13
+              : arreglo_inicial[i].TipoDeCuenta === "Patrimonio"
+              ? 14
+              : arreglo_inicial[i].TipoDeCuenta === "Utilidades Antes de Impuestos"
+              ? 15
+              : arreglo_inicial[i].TipoDeCuenta === "Utilidad Bruta"
+              ? 16
+              : arreglo_inicial[i].TipoDeCuenta === "Utilidad Neta"
+              ? 17
+              : 18,
           empresa_id: this.state.ultima_empresa_id,
         };
       }

@@ -26,6 +26,7 @@ Route::get('/getCuentaID', 'App\Http\Controllers\CuentaController@getCuentaID');
 
 //Sectores
 Route::get('/sectores', 'App\Http\Controllers\SectoresController@index'); //Mostrar todos los sectores
+Route::get('/sectoresConActividad', 'App\Http\Controllers\SectoresController@sectoresConActividad'); //Mostrar todos los sectores con sus actividades
 
 //ActividadEconomica
 Route::get('/actividades', 'App\Http\Controllers\ActividadEconomicaController@index'); //Mostrar todas las actividades
@@ -55,6 +56,16 @@ Route::get('/analisisHorizontal/existencia', 'App\Http\Controllers\AnalisisHoriz
 Route::get('/analisisVertical', 'App\Http\Controllers\AnalisisVerticalController@index');
 Route::post('/analisisVertical', 'App\Http\Controllers\AnalisisVerticalController@store');
 Route::get('/analisisVertical/existencia', 'App\Http\Controllers\AnalisisVerticalController@existencia');
+
+//Razones Financieras
+Route::get('/razonesFinancieras', 'App\Http\Controllers\RazonFinancieraController@index'); //Mostrar todas las razones financieras
+
+//Periodos Ratios
+Route::get('/ratiosEmpresa/periodo', 'App\Http\Controllers\RatiosEmpresaController@periodo');
+
+//Mostrar ratios segun razon financiera, tipo informe, y los periodos
+Route::get('/ratiosEmpresa/informe', 'App\Http\Controllers\RatiosEmpresaController@informe');
+Route::get('/ratiosEmpresa/promedio', 'App\Http\Controllers\RatiosEmpresaController@promedio');
 
 //Graficar.
 Route::get('/graficar','App\Http\Controllers\GraficarController@index');

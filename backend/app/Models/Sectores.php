@@ -10,6 +10,6 @@ class Sectores extends Model
     use HasFactory;
     protected $fillable = ['nombre', 'descripcion'];
     public function actividades(){
-        return $this->hasMany('App\Models\ActividadEconomica');
+        return $this->hasMany('App\Models\ActividadEconomica','sector_id');
     }
 }

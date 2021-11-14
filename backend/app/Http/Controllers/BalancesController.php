@@ -43,7 +43,7 @@ class BalancesController extends Controller
         $balance->anio = $request->anio;
         $balance->valor = $request->valor;
         $balance->empresa_id = $request->empresa_id;
-        $cuenta_id = Cuenta::where('codigo', $request->cuenta_id)->first()->id;
+        $cuenta_id = Cuenta::where([['codigo', "=", $request->cuenta_id], ['empresa_id', "=", $request->empresa_id]])->first()->id;
         $balance->cuenta_id = $cuenta_id;
         $balance->save();
     }

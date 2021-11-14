@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ratio;
 use Illuminate\Http\Request;
-use App\Models\Sectores;
-class SectoresController extends Controller
+use Illuminate\Support\Facades\DB;
+
+class RatioController extends Controller
 {
-    //
     /**
      * Display a listing of the resource.
      *
@@ -14,8 +15,8 @@ class SectoresController extends Controller
      */
     public function index()
     {
-        $sectores = Sectores::all();
-        return $sectores;
+        $ratio = Ratio::all();
+        return $ratio;
     }
 
     /**
@@ -36,11 +37,7 @@ class SectoresController extends Controller
      */
     public function store(Request $request)
     {
-        $sectores = new Sectores();
-        $sectores->nombre =  $request->nombre;
-        $sectores->descripcion =  $request->descripcion;
-
-        $cuenta->save();
+        //
     }
 
     /**
@@ -64,17 +61,7 @@ class SectoresController extends Controller
     {
         //
     }
-    /**
-     * Display a listing of the resource.
-     ** @param  \Illuminate\Http\Request  $request
-     *  
-     * @return \Illuminate\Http\Response
-     */
-    public function sectoresConActividad()
-    {
-        $sectores = Sectores::with('actividades')->get();
-        return $sectores;
-    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -82,14 +69,9 @@ class SectoresController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $sectores = Sectores::findOrFail($request->id);
-        $sectores->nombre =  $request->nombre;
-        $sectores->descripcion =  $request->tipo;
-
-        $sectores->save();
-        return $sectores;
+        //
     }
 
     /**
@@ -98,9 +80,8 @@ class SectoresController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($request)
+    public function destroy($id)
     {
-        $sectores = Sectores::destroy($request->id);
-        return $sectores;
+        //
     }
 }

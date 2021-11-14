@@ -13,6 +13,7 @@ class InformeRatios extends Component {
       super(props);
       this.state = {
         periodos: [],
+        empresas: [],
         periodoInicio: [],
         periodoFin: [],
         sectores: [],
@@ -35,6 +36,7 @@ class InformeRatios extends Component {
           diagnostico: ""
         },
         form: {
+            empresa: "",
             razonFinanciera: "",
             tipoInforme: "",
             periodoInicio: "",
@@ -45,19 +47,15 @@ class InformeRatios extends Component {
   
     componentDidMount() {
 
-        //informacion de los periodos
+        //Empresa
         axios
-         .get("http://127.0.0.1:8000/api/ratiosEmpresa/periodo/", {
-         params: {
-             empresa: 1 /* Cambiar cuando haya logeo */,
-         },
-         })
-         .then((response) => {
-          this.setState({ periodos: response.data });
-         })
-         .catch((error) => {
+        .get("http://127.0.0.1:8000/api/empresas/")
+        .then((response) => {
+          this.setState({empresas: response.data});
+        })
+        .catch((error) => {
           console.log(error);
-         });
+        });
 
         //Informacion de las razones
         axios
@@ -70,11 +68,27 @@ class InformeRatios extends Component {
         });
     }
 
+    obtenerPeriodos(){
+      //informacion de los periodos
+      axios
+       .get("http://127.0.0.1:8000/api/ratiosEmpresa/periodo/", {
+       params: {
+           empresa: this.state.form.empresa
+       },
+       })
+       .then((response) => {
+        this.setState({ periodos: response.data });
+       })
+       .catch((error) => {
+        console.log(error);
+       });
+  }
+
     peticionGet(){
       axios
       .get("http://127.0.0.1:8000/api/ratiosEmpresa/informe/", {
         params: {
-            empresa: 1,
+            empresa: this.state.form.empresa,
             razonFinanciera: this.state.form.razonFinanciera,
             periodo: this.state.form.periodoInicio,
         }
@@ -84,7 +98,6 @@ class InformeRatios extends Component {
             periodoInicio: response.data,
             cantidadFilas: response.data.length
           });
-          console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -93,7 +106,7 @@ class InformeRatios extends Component {
       axios
       .get("http://127.0.0.1:8000/api/ratiosEmpresa/informe/", {
         params: {
-          empresa: 1,
+          empresa: this.state.form.empresa,
           razonFinanciera: this.state.form.razonFinanciera,
           periodo: this.state.form.periodoFin,
         }
@@ -152,8 +165,12 @@ class InformeRatios extends Component {
           ...this.state.form,
           [e.target.name]: e.target.value,
         },
-      });
+      }
+      );
+
+      this.obtenerPeriodos()
     };
+
 
     //Metodo que realiza el calculo del analisis horizontal
     asignacionRatios() {
@@ -168,7 +185,6 @@ class InformeRatios extends Component {
       let resFin = 0;
 
       for (var i = 0; i < this.state.periodoInicio.length; i++) {
-        console.log(this.state.periodoFin[i]);
 
         if(this.state.periodoInicio[i].nombre === this.state.periodoFin[i].nombre){
           valor_final = this.state.periodoFin[i].valor_ratio_empresas;
@@ -267,6 +283,34 @@ class InformeRatios extends Component {
         <Opciones
           opciones={
             <>
+
+              <Col md="auto pt-2">
+                <Form.Group>
+                  <Form.Label>Empresa</Form.Label>
+                  <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip>Seleccione la empresa que desee</Tooltip>}
+                  >
+                    <Form.Select
+                      id="empresa"
+                      name="empresa"
+                      value={form.empresa}
+                      onChange={this.handleChange}
+                    >
+                      <option value="" disabled={true}>
+                        Seleccione...
+                      </option>
+                      {this.state.empresas.map((elemento) => (
+                        <option key={elemento.id} value={elemento.id}>
+                          {elemento.nombre}
+                        </option>
+                      ))}
+
+                    </Form.Select>
+                  </OverlayTrigger>
+                </Form.Group>
+              </Col>
+
               <Col md="auto pt-2">
                 <Form.Group>
                   <Form.Label>Razón Financiera</Form.Label>

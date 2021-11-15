@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cuenta;
+use App\Models\balances;
+use Illuminate\Support\Facades\DB;
 
 class CuentaController extends Controller
 {
@@ -45,6 +47,8 @@ class CuentaController extends Controller
 
         $cuenta->save();
     }
+
+
     /**
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -109,5 +113,15 @@ class CuentaController extends Controller
     {
         $cuenta = Cuenta::destroy($request->id);
         return $cuenta;
+    }
+
+    public function cuentasR($idEmpresa)
+    {
+        $cuentas = DB::table("balances")
+            ->distinct()
+            ->join('cuentas', 'cuentas.id', '=', 'balances.cuenta_id')
+            ->select('cuentas.nombre', 'cuentas.id')
+            ->where('balances.empresa_id', '=', $idEmpresa)->get();
+        return $cuentas;
     }
 }

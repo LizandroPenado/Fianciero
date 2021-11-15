@@ -66,3 +66,9 @@ Route::get('/ratiosEmpresa/periodo', 'App\Http\Controllers\RatiosEmpresaControll
 //Mostrar ratios segun razon financiera, tipo informe, y los periodos
 Route::get('/ratiosEmpresa/informe', 'App\Http\Controllers\RatiosEmpresaController@informe');
 Route::get('/ratiosEmpresa/promedio', 'App\Http\Controllers\RatiosEmpresaController@promedio');
+
+//Graficar.
+Route::get('/graficar','App\Http\Controllers\GraficarController@index');
+Route::post('/graficar','App\Http\Controllers\GraficarController@datosG');
+Route::get('/cuentaEmpresa/{idEmpresa}','App\Http\Controllers\CuentaController@cuentasR');
+Route::get('/EmpresasG','App\Http\Controllers\EmpresasController@EmpresasR');

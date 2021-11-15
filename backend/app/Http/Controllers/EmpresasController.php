@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Empresas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EmpresasController extends Controller
 {
@@ -99,5 +100,13 @@ class EmpresasController extends Controller
     public function destroy(Empresas $empresas)
     {
         //
+    }
+    //Función de recuperación.
+    public function empresasR()
+    {
+        $empresas = DB::table('empresas')
+        ->select('empresas.id','empresas.nombre')
+        ->get();
+        return $empresas;
     }
 }

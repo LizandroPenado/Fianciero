@@ -3,7 +3,7 @@ import { Container, Row, Col} from "react-bootstrap";
 
 export default function opciones(props) {
   return (
-    <Container className="opciones-analisis pb-2 text-center pt-2 pb-4">
+    <Container className={props.estilos + " pb-2 text-center pt-2 pb-4"}>
       <Row className="justify-content-md-center">
         {props.opciones}
         <Col md="auto" className="align-self-end pt-3">

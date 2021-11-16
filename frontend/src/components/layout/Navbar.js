@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { SidebarData } from './SidebarData';
 import './Navbar.css';
 import { IconContext } from 'react-icons';
+import { AnalisisData } from './AnalisisData';
 
 function Navbar() {
   const [sidebar, setSidebar] = useState(false);
@@ -27,6 +28,17 @@ function Navbar() {
               </Link>
             </li>
             {SidebarData.map((item, index) => {
+              return (
+                <li key={index} className={item.cName}>
+                  <Link to={item.path}>
+                    {item.icon}
+                    <span className="span">{item.title}</span>
+                  </Link>
+                </li>
+              );
+            })}
+            <li className="division">Informes</li>
+            {AnalisisData.map((item, index) => {
               return (
                 <li key={index} className={item.cName}>
                   <Link to={item.path}>
